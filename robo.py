@@ -1,19 +1,19 @@
 import RPi.GPIO as GPIO
 import time
 import myutils
+from adafruit_servokit import ServoKit
 from servo import Servo
 
 class Robo():
 
     def __init__(self):
-        GPIO.setmode(GPIO.BOARD)
-        self.servos = [Servo(37, (-180, 180)), Servo(35, (-90, 90)), Servo(33, (-90, 90), True), Servo(31, (-90, 90))]
+        kit = ServoKit(channels=16)
+        self.servos = [Servo(0, (-180, 180), kit), Servo(1, (-90, 90), kit), Servo(2, (-90, 90), kit, True), Servo(3, (-90, 90), kit)]
             
     def __del__(self):
         pass
 
     def moveTo(self, angles):
-        dutyCycles = []
         for i in range(len(angles)):
             self.servos[i].setAngle(angles[i])
 
