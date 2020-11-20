@@ -8,4 +8,3 @@ def map(value, sourceMin, sourceMax, targetMin, targetMax):
     targetRange = targetMax - targetMin
     mappedValue = (value - sourceMin) * targetRange/sourceRange + targetMin
     return mappedValue
-    
