@@ -7,8 +7,10 @@ from myLogger import log
 class InverseKinematics():
 
     def __init__(self):
-        self.armLength = 10
+        # Second robo, with dynamixel
+        self.armLength = 5
         self.smallArmLength = 5
+        lim = 7*math.pi/9
         self.chain = Chain(name='arm', links=[
             OriginLink(
             ),
@@ -24,28 +26,28 @@ class InverseKinematics():
             translation_vector=[0, 0, 0],
             orientation=[0, 0, 0],
             rotation=[0, 1, 0],
-            bounds=(-4*math.pi/9,4*math.pi/9)
+            bounds=(-lim,lim)
             ),
             URDFLink(
             name="second",
             translation_vector=[0, 0, self.armLength],
             orientation=[0, 0, 0],
             rotation=[0, -1, 0],
-            bounds=(-4*math.pi/9,4*math.pi/9)
+            bounds=(-lim,lim)
             ),
             URDFLink(
             name="third",
             translation_vector=[0, 0, self.armLength],
             orientation=[0, 0, 0],
             rotation=[0, 1, 0],
-            bounds=(-4*math.pi/9,4*math.pi/9)
+            bounds=(-lim,lim)
             ),
             URDFLink(
             name="fourth",
             translation_vector=[0, 0, self.armLength],
             orientation=[0, 0, 0],
             rotation=[0, -1, 0],
-            bounds=(-4*math.pi/9,4*math.pi/9)
+            bounds=(-lim,lim)
             ),
             URDFLink(
             name="tip",
@@ -63,6 +65,66 @@ class InverseKinematics():
         self.radToDegreeFactor = 180 / math.pi
         self.degreeToRadFactor = math.pi / 180
         self.numberOfLinks = len(self.chain.links)
+
+
+    # def __init__(self):
+    #     # First robo, with MG995 Servos
+    #     self.armLength = 10
+    #     self.smallArmLength = 5
+    #     self.chain = Chain(name='arm', links=[
+    #         OriginLink(
+    #         ),
+    #         URDFLink(
+    #         name="base",
+    #         translation_vector=[0, 0, 0],
+    #         orientation=[0, 0, 0],
+    #         rotation=[0, 0, 1],
+    #         bounds=(-math.pi,math.pi)
+    #         ),
+    #         URDFLink(
+    #         name="first",
+    #         translation_vector=[0, 0, 0],
+    #         orientation=[0, 0, 0],
+    #         rotation=[0, 1, 0],
+    #         bounds=(-4*math.pi/9,4*math.pi/9)
+    #         ),
+    #         URDFLink(
+    #         name="second",
+    #         translation_vector=[0, 0, self.armLength],
+    #         orientation=[0, 0, 0],
+    #         rotation=[0, -1, 0],
+    #         bounds=(-4*math.pi/9,4*math.pi/9)
+    #         ),
+    #         URDFLink(
+    #         name="third",
+    #         translation_vector=[0, 0, self.armLength],
+    #         orientation=[0, 0, 0],
+    #         rotation=[0, 1, 0],
+    #         bounds=(-4*math.pi/9,4*math.pi/9)
+    #         ),
+    #         URDFLink(
+    #         name="fourth",
+    #         translation_vector=[0, 0, self.armLength],
+    #         orientation=[0, 0, 0],
+    #         rotation=[0, -1, 0],
+    #         bounds=(-4*math.pi/9,4*math.pi/9)
+    #         ),
+    #         URDFLink(
+    #         name="tip",
+    #         translation_vector=[0, 0, self.smallArmLength],
+    #         orientation=[0, 0, 0],
+    #         rotation=[0, 0, 0],
+    #         )
+    #     ])
+    #     self.xMin = -3*self.armLength - self.smallArmLength
+    #     self.xMax = 3*self.armLength + self.smallArmLength
+    #     self.yMin = -3*self.armLength - self.smallArmLength
+    #     self.yMax = 3*self.armLength + self.smallArmLength
+    #     self.zMin = 0
+    #     self.zMax = 3*self.armLength + self.smallArmLength
+    #     self.radToDegreeFactor = 180 / math.pi
+    #     self.degreeToRadFactor = math.pi / 180
+    #     self.numberOfLinks = len(self.chain.links)
 
     def __del__(self):
         pass
@@ -138,8 +200,8 @@ class InverseKinematics():
             if abs(calcPosPerc[i] - pos[i]) > 2:
                 outOfRange = True
                 break
-        # log("all Angles: {}".format(angles))
-        # log("Out of range: {}, calcPosPerc {}".format(outOfRange, calcPosPerc),"OK")
-        # log("set pos: {}".format(pos),"OK")
-        # print("Angles are: {}".format(newAngles))
+        log("all Angles: {}".format(angles))
+        log("Out of range: {}, calcPosPerc {}".format(outOfRange, calcPosPerc),"OK")
+        log("set pos: {}".format(pos),"OK")
+        log("Angles are: {}".format(newAngles))
         return newAngles, outOfRange

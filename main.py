@@ -8,12 +8,22 @@ import imutils
 from myutils import map
 import math
 from myLogger import log
+from servo import Servo
+from adafruit_servokit import ServoKit
+from dynamixel import Dynamixel
 
-robo = Robo()
+import serial
+ser = serial.Serial('/dev/ttyACM0', 115200, timeout=1)
+ser.flush()
+
+# kit = ServoKit(channels=16)
+# servos = [Servo(0, (-180, 180), kit, lock), Servo(1, (-90, 90), kit, lock,5), Servo(2, (-90, 90), kit, lock, -5, True), Servo(3, (-90, 90), kit, lock,7), Servo(4, (-90, 90), kit, lock, True)]
+servos = [Dynamixel(0, ser), Dynamixel(1, ser), Dynamixel(2, ser), Dynamixel(3, ser), Dynamixel(4, ser)]
+robo = Robo(servos)
 
 def simpleMovementExample():
     for i in range(-80,90,10):
-        robo.moveToRaw([i,-60,30])
+        robo.moveToRaw([i,0,50])
         time.sleep(0.5)
 
 def myMove():
@@ -50,14 +60,14 @@ def moveWithCV(showMovie=False):
 try:
     # robo.chill()
     # time.sleep(2.0)
-    # simpleMovementExample()
+    simpleMovementExample()
     # robo.moveToRaw([35/35*100,0,0/35*100])
     # robo.moveToRaw([40,-5,50])
 
     # time.sleep(2.0)
     # robo.chill()
     # moveWithCV()
-    robo.moveToRaw([-50,-30,50])
+    # robo.moveToRaw([-50,-30,50])
     # moveWithCV(showMovie=True)
     # robo.moveToRaw([0.1,-60,30])
     # robo.setAngleFor(1,5)

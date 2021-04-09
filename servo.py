@@ -3,8 +3,9 @@ import myutils
 from myLogger import log
 import time
 from adafruit_servokit import ServoKit
+from IServo import IServo
 
-class Servo():
+class Servo(IServo):
 
     # kit = ServoKit(channels=16)
 

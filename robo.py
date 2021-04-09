@@ -1,8 +1,6 @@
 import RPi.GPIO as GPIO
 import time
 import myutils
-from adafruit_servokit import ServoKit
-from servo import Servo
 from threading import Thread
 from threading import Lock
 from inversekinematics import InverseKinematics
@@ -11,11 +9,11 @@ from myLogger import log
 class Robo():
 
 
-    def __init__(self):
-        kit = ServoKit(channels=16)
+    def __init__(self, servos):
+        
         lock = Lock()
         self.kinematics = InverseKinematics()
-        self.servos = [Servo(0, (-180, 180), kit, lock), Servo(1, (-90, 90), kit, lock,5), Servo(2, (-90, 90), kit, lock, -5, True), Servo(3, (-90, 90), kit, lock,7), Servo(4, (-90, 90), kit, lock, True)]
+        self.servos = servos
         angles = []
         for servo in self.servos:
             angles.append(servo.getAngle())
