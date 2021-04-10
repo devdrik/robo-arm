@@ -13,19 +13,35 @@ servos = [servo1, servo2, servo3, servo4]
 
 waitUart = 0.1
 
-for i in range(4):
-    servos[i].setAngle(10)
-    sleep(waitUart)
 
-sleep(1)
-for i in range(4):
-    servos[i].setAngle(45)
-    sleep(waitUart)
+def setAngleAll(angle1, angle2, angle3, angle4):
+    function = 3
+    correctedAngle1 = angle1 + 180
+    correctedAngle2 = angle2 + 180
+    correctedAngle3 = angle3 + 180
+    correctedAngle4 = angle4 + 180
+    ser.flush()
+    ser.write("{func}:{ang1}:{ang2}:{ang3}:{ang4}\n".format(func=function, ang1=correctedAngle1, ang2=correctedAngle2, ang3=correctedAngle3, ang4=correctedAngle4).encode("utf-8"))
+    sleep(0.2)
 
-sleep(1)
-for i in range(4):
-    servos[i].setAngle(70)
-    sleep(waitUart)
+
+ang=0
+
+setAngleAll(ang,ang,ang,ang)
+
+# for i in range(4):
+#     servos[i].setAngle(10)
+#     sleep(waitUart)
+
+# sleep(1)
+# for i in range(4):
+#     servos[i].setAngle(45)
+#     sleep(waitUart)
+
+# sleep(1)
+# for i in range(4):
+#     servos[i].setAngle(70)
+#     sleep(waitUart)
 
 
 

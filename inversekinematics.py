@@ -8,8 +8,8 @@ class InverseKinematics():
 
     def __init__(self):
         # Second robo, with dynamixel
-        self.armLength = 5
-        self.smallArmLength = 5
+        self.armLength = 4
+        self.smallArmLength = 4
         lim = 7*math.pi/9
         self.chain = Chain(name='arm', links=[
             OriginLink(

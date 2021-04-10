@@ -22,14 +22,14 @@ servos = [Dynamixel(0, ser), Dynamixel(1, ser), Dynamixel(2, ser), Dynamixel(3, 
 robo = Robo(servos)
 
 def simpleMovementExample():
-    for i in range(-80,90,10):
+    for i in range(-80,90,2):
         robo.moveToRaw([i,0,50])
-        time.sleep(0.5)
+        # time.sleep(0.5)
 
 def myMove():
-    path = [[30, 50, 50],[40, 50, 50],[51, 50, 50],[60, 50, 50],[70, 50, 50]]
+    path = [[-70, 0, 20],[-70, 0, 60],[0, 0, 60],[70, 0, 60],[70, 0, 20]]
     for point in path:
-        robo.moveToSmooth(point)
+        robo.moveToRaw(point)
 
 def moveWithCV(showMovie=False):
     ip = ImageProcessor()
@@ -57,10 +57,69 @@ def moveWithCV(showMovie=False):
         # robo.moveToRaw([x,-30,y])
         # time.sleep(0.1)
 
+kinematics = InverseKinematics()
+def getAngles(pos):
+    angles, outOfRange = kinematics.getAnglesRaw(pos)
+    return angles
+
+def moveCircle():
+    step = 2
+    r = 40
+    mx = 0
+    mz = 50
+    angles = []
+    for xc in range( - r, r, step):
+        y = 0
+        x = xc + mx
+        z = mz + math.sqrt(r**2 - xc**2)
+        log("x={}, y={}, z={}".format(x,y,z))
+        angles.append(getAngles([x,y,z]))
+        # robo.moveToRaw([x,y,z])
+        # time.sleep(1)
+    for xc in range( r, -r, -step):
+        y = 0
+        x = xc + mx
+        z = mz - math.sqrt(r**2 - xc**2)
+        log("x={}, y={}, z={}".format(x,y,z))
+        angles.append(getAngles([x,y,z]))
+        # robo.moveToRaw([x,y,z])
+        # time.sleep(1)
+    for angle in angles:
+        robo.setAngles(angle)
+
+def createCircleFile():
+    step = 2
+    r = 40
+    mx = 0
+    mz = 50
+    angles = []
+    for xc in range( - r, r, step):
+        y = 0
+        x = xc + mx
+        z = mz + math.sqrt(r**2 - xc**2)
+        log("x={}, y={}, z={}".format(x,y,z))
+        angles.append(getAngles([x,y,z]))
+    for xc in range( r, -r, -step):
+        y = 0
+        x = xc + mx
+        z = mz - math.sqrt(r**2 - xc**2)
+        log("x={}, y={}, z={}".format(x,y,z))
+        angles.append(getAngles([x,y,z]))
+    
+    fname = "circle_r{}_step{}_mx{}_mz{}".format(r,step,mx,mz)
+    with open(fname, "a") as f:
+        for angle in angles:
+            f.write("{},{},{},{},{}\n".format(angle[0],angle[1],angle[2],angle[3],angle[4]))
+
+
+
 try:
+    createCircleFile()
     # robo.chill()
     # time.sleep(2.0)
-    simpleMovementExample()
+    # simpleMovementExample()
+    # moveCircle()
+    # myMove()
     # robo.moveToRaw([35/35*100,0,0/35*100])
     # robo.moveToRaw([40,-5,50])
 

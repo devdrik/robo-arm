@@ -19,4 +19,4 @@ class Dynamixel(IServo):
         log("setting {} to {}".format(self.id,correctedAngle))
         self.ser.flush()
         self.ser.write("{func}:{id}:{ang}\n".format(func=function, id=self.id, ang=correctedAngle).encode("utf-8"))
-        sleep(0.1)
+        # sleep(0.01)
