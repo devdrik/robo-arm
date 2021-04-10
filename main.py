@@ -98,23 +98,47 @@ def createCircleFile():
         x = xc + mx
         z = mz + math.sqrt(r**2 - xc**2)
         log("x={}, y={}, z={}".format(x,y,z))
-        angles.append(getAngles([x,y,z]))
+        angle, outOfRange = kinematics.getAnglesRaw([x,y,z])
+        if not outOfRange:
+            angles.append(angle)
     for xc in range( r, -r, -step):
         y = 0
         x = xc + mx
         z = mz - math.sqrt(r**2 - xc**2)
         log("x={}, y={}, z={}".format(x,y,z))
-        angles.append(getAngles([x,y,z]))
+        angle, outOfRange = kinematics.getAnglesRaw([x,y,z])
+        if not outOfRange:
+            angles.append(angle)
     
     fname = "circle_r{}_step{}_mx{}_mz{}".format(r,step,mx,mz)
     with open(fname, "a") as f:
         for angle in angles:
             f.write("{},{},{},{},{}\n".format(angle[0],angle[1],angle[2],angle[3],angle[4]))
 
-
+def readAngles():
+    r=40
+    step=2
+    mx=0
+    mz=50
+    fname = "circle_r{}_step{}_mx{}_mz{}".format(r,step,mx,mz)
+    with open(fname) as f:
+        lines = f.readlines()
+    angles = []
+    print(lines)
+    for line in lines:
+        lineValues = []
+        for value in line.split(','):
+            if value.endswith("\n"):
+                value=value[:-2]
+            lineValues.append(float(value))
+        angles.append(lineValues)
+    return angles
+        
 
 try:
     createCircleFile()
+    for angles in readAngles():
+        robo.setAngles(angles)
     # robo.chill()
     # time.sleep(2.0)
     # simpleMovementExample()
