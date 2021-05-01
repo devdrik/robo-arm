@@ -22,8 +22,8 @@ servos = [Dynamixel(0, ser), Dynamixel(1, ser), Dynamixel(2, ser), Dynamixel(3, 
 robo = Robo(servos)
 
 def simpleMovementExample():
-    for i in range(-80,90,2):
-        robo.moveToRaw([i,0,50])
+    for i in range(-60,60,10):
+        robo.moveToRaw([i,40,50])
         # time.sleep(0.5)
 
 def myMove():
@@ -89,8 +89,8 @@ def moveCircle():
 
 def createCircleFile():
     step = 2
-    r = 40
-    mx = 0
+    r = 30
+    mx = 20
     mz = 50
     angles = []
     for xc in range( - r, r, step):
@@ -124,7 +124,7 @@ def readAngles():
     with open(fname) as f:
         lines = f.readlines()
     angles = []
-    print(lines)
+    # print(lines)
     for line in lines:
         lineValues = []
         for value in line.split(','):
@@ -136,12 +136,21 @@ def readAngles():
         
 
 try:
-    createCircleFile()
+    # createCircleFile()
     for angles in readAngles():
+        print(angles)
         robo.setAngles(angles)
-    # robo.chill()
+    robo.chill()
     # time.sleep(2.0)
     # simpleMovementExample()
+
+    # robo.moveToRaw([-50,-50,50])
+    # robo.moveToRaw([-50,-50,40])
+    # robo.moveToRaw([-50,-50,30])
+    # robo.moveToRaw([-50,-50,20])
+    # robo.moveToRaw([-50,-50,10])
+    # robo.moveToRaw([-50,-50,0])
+
     # moveCircle()
     # myMove()
     # robo.moveToRaw([35/35*100,0,0/35*100])

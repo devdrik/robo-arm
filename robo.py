@@ -58,7 +58,9 @@ class Robo():
             self.setAngles(angles)
 
     def moveToRaw(self, pos):
+        # startTime = time.time()
         angles, outOfRange = self.kinematics.getAnglesRaw(pos)
+        # log("elapsed time: {}".format(time.time() - startTime))
         if not outOfRange:
             self.setAngles(angles)
         else:

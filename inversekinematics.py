@@ -3,6 +3,7 @@ from ikpy.link import OriginLink, URDFLink
 import math
 import myutils
 from myLogger import log
+import time
 
 class InverseKinematics():
 
@@ -188,8 +189,9 @@ class InverseKinematics():
         corrPos.append(pos[2]*self.zMax/100)
         anglesRad = self.chain.inverse_kinematics(corrPos)
         angles = anglesRad * self.radToDegreeFactor
-        
+        startTime = time.time()
         calcPos = self.chain.forward_kinematics(anglesRad)[:3,3]
+        log("elapsed timeO: {}".format(time.time() - startTime))
         calcPosPerc = self.getPosition(angles, True)
         
         newAngles = []
