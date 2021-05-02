@@ -23,7 +23,7 @@ robo = Robo(servos)
 
 def simpleMovementExample():
     for i in range(-60,60,10):
-        robo.moveToRaw([i,40,50])
+        robo.moveToRaw([i,0,50])
         # time.sleep(0.5)
 
 def myMove():
@@ -137,12 +137,17 @@ def readAngles():
 
 try:
     # createCircleFile()
-    for angles in readAngles():
-        print(angles)
-        robo.setAngles(angles)
-    robo.chill()
-    # time.sleep(2.0)
-    # simpleMovementExample()
+    # for angles in readAngles():
+    #     print(angles)
+    #     robo.setAngles(angles)
+    # robo.chill()
+    time.sleep(2.0)
+    simpleMovementExample()
+
+    # robo.moveToRaw([-50,-50,0])
+    # robo.moveToRaw([-60,-60,0])
+    # robo.moveToRaw([-65,-65,0])
+
 
     # robo.moveToRaw([-50,-50,50])
     # robo.moveToRaw([-50,-50,40])

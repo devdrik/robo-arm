@@ -11,7 +11,8 @@ class InverseKinematics():
         # Second robo, with dynamixel
         self.armLength = 4
         self.smallArmLength = 4
-        lim = 7*math.pi/9
+        lim = math.pi/4
+        lim2 = 7*math.pi/9
         self.chain = Chain(name='arm', links=[
             OriginLink(
             ),
@@ -34,21 +35,21 @@ class InverseKinematics():
             translation_vector=[0, 0, self.armLength],
             orientation=[0, 0, 0],
             rotation=[0, -1, 0],
-            bounds=(-lim,lim)
+            bounds=(-lim2,lim2)
             ),
             URDFLink(
             name="third",
             translation_vector=[0, 0, self.armLength],
             orientation=[0, 0, 0],
             rotation=[0, 1, 0],
-            bounds=(-lim,lim)
+            bounds=(-lim2,lim2)
             ),
             URDFLink(
             name="fourth",
             translation_vector=[0, 0, self.armLength],
             orientation=[0, 0, 0],
             rotation=[0, -1, 0],
-            bounds=(-lim,lim)
+            bounds=(-lim2,lim2)
             ),
             URDFLink(
             name="tip",
