@@ -8,7 +8,6 @@ from myLogger import log
 
 class Robo():
 
-
     def __init__(self, servos):
         
         lock = Lock()
@@ -26,6 +25,21 @@ class Robo():
     def setAngles(self, angles):
         for i in range(len(angles)):
             self.servos[i].setAngle(angles[i])
+
+    def setAnglesBlocking(self, angles):
+        for i in range(len(angles)):
+            self.servos[i].setAngle(angles[i])
+        done = [False for n in self.servos]
+        while True:
+            for i in range(len(angles)):
+                if not done[i]:
+                    done[i] = self.servos[i].hasReachedAngle()
+            if all(i for i in done):
+                break
+
+
+
+        
 
     def setAnglesSmooth(self, servoIndex, angles, controlTimeInMs):
         self.servos[servoIndex].setAngleSmooth2(angles, controlTimeInMs)
@@ -76,3 +90,9 @@ class Robo():
 
     def moveBySmooth(self, position):
         self.moveToSmooth(self.position + position)
+
+    def setVelocity(self, velocity):
+        vel = velocity if velocity < 32767 and velocity > 0 else 0
+        print("vel: ", vel)
+        for servo in self.servos:
+            servo.setProfileVelocity(vel)
