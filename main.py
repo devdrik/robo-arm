@@ -62,56 +62,40 @@ def getAngles(pos):
     angles, outOfRange = kinematics.getAnglesRaw(pos)
     return angles
 
+def getCoordinatesFrom(radius, mx, my, mz, alpha):
+    y = my
+    x = mx + math.cos(math.radians(alpha)) * radius
+    z = mz + math.sin(math.radians(alpha)) * radius
+    log("x={}, y={}, z={}".format(x,y,z))
+    return [x,y,z]
+
 def moveCircle():
-    step = 2
-    r = 40
-    mx = 0
-    mz = 50
+    stepDegree = 12
+    r = 20
+    mx = -40
+    my = -40
+    mz = 30
     angles = []
-    for xc in range( - r, r, step):
-        y = 0
-        x = xc + mx
-        z = mz + math.sqrt(r**2 - xc**2)
-        log("x={}, y={}, z={}".format(x,y,z))
-        angles.append(getAngles([x,y,z]))
-        # robo.moveToRaw([x,y,z])
-        # time.sleep(1)
-    for xc in range( r, -r, -step):
-        y = 0
-        x = xc + mx
-        z = mz - math.sqrt(r**2 - xc**2)
-        log("x={}, y={}, z={}".format(x,y,z))
-        angles.append(getAngles([x,y,z]))
-        # robo.moveToRaw([x,y,z])
-        # time.sleep(1)
-    for angle in angles:
+    offset = 90
+    for alpha in range( 0 + offset, 360 + offset, stepDegree):
+        coordinates = getCoordinatesFrom(r,mx,my,mz,alpha)
+        angle = getAngles(coordinates)
         robo.setAngles(angle)
 
 def createCircleFile():
-    step = 2
+    stepDegree = 6
     r = 30
     mx = 20
     mz = 50
     angles = []
-    for xc in range( - r, r, step):
-        y = 0
-        x = xc + mx
-        z = mz + math.sqrt(r**2 - xc**2)
-        log("x={}, y={}, z={}".format(x,y,z))
-        angle, outOfRange = kinematics.getAnglesRaw([x,y,z])
-        if not outOfRange:
-            angles.append(angle)
-    for xc in range( r, -r, -step):
-        y = 0
-        x = xc + mx
-        z = mz - math.sqrt(r**2 - xc**2)
-        log("x={}, y={}, z={}".format(x,y,z))
+    for alpha in range( 0, 360, stepDegree):
+        [x,y,z] = getCoordinatesFrom(r,mx,my,mz,alpha)
         angle, outOfRange = kinematics.getAnglesRaw([x,y,z])
         if not outOfRange:
             angles.append(angle)
     
-    fname = "circle_r{}_step{}_mx{}_mz{}".format(r,step,mx,mz)
-    with open(fname, "a") as f:
+    fname = "circle_r{}_step{}_mx{}_mz{}".format(r,stepDegree,mx,mz)
+    with open(fname, "w") as f:
         for angle in angles:
             f.write("{},{},{},{},{}\n".format(angle[0],angle[1],angle[2],angle[3],angle[4]))
 
@@ -133,16 +117,116 @@ def readAngles():
             lineValues.append(float(value))
         angles.append(lineValues)
     return angles
+
+def getAnglesFromFile(fname):
+    with open(fname) as f:
+        lines = f.readlines()
+    angles = []
+    # print(lines)
+    for line in lines:
+        lineValues = []
+        for value in line.split(','):
+            if value.endswith("\n"):
+                value=value[:-2]
+            lineValues.append(float(value))
+        angles.append(lineValues)
+    return angles
         
+def auroraMoves():
+    # robo.setVelocity(100)
+    robo.moveToRaw([30,10,60])
+    time.sleep(2.0)
+    robo.moveToRaw([120,-30,30])
+    time.sleep(2.0)
+    robo.setAngles([-120, -45, 45, 45, 45])
+    time.sleep(2.0)
+    robo.setAngles([-167, 0, 90, 80, -70])
+
+def wafe():
+    # for angle in range(-50, 50, 1):
+    #     robo.setAngles([0, -angle, angle, -angle, angle])
+    while True:
+        for angle in range(-29, 30, 1):
+            robo.setAngles([0, -angle, angle*1.1, -angle*1.4, angle*2])
+        for angle in range(29, -30, -1):
+            robo.setAngles([0, -angle, angle*1.1, -angle*1.4, angle*2])
+
+def dance():
+    # for angle in range(-50, 50, 1):
+    #     robo.setAngles([0, -angle, angle, -angle, angle])
+    # while True:
+    #     for angle in range(0, 60, 1):
+    #         robo.setAngles([0, angle, 2*angle, angle, 0])
+    #     for angle in range(59, 1, -1):
+    #         robo.setAngles([0, angle, 2*angle, angle, 0])
+    #     for angle in range(0, 60, 1):
+    #         robo.setAngles([0, 0, angle, 2*angle, angle])
+    #     for angle in range(59, 1, -1):
+    #         robo.setAngles([0, 0, angle, 2*angle, angle])
+    #     for angle in range(0, 60, 1):
+    #         robo.setAngles([0, 0, 0, angle, 2*angle])
+    #     for angle in range(59, 1, -1):
+    #         robo.setAngles([0, 0, 0, angle, 2*angle])
+    robo.setVelocity(150)
+    while True:
+        angle = 60
+        robo.setAnglesBlocking([0, angle, 2*angle, angle, 0])
+        angle = 0
+        robo.setAnglesBlocking([0, angle, 2*angle, angle, 0])
+        angle = 60
+        robo.setAnglesBlocking([0, 0, angle, 2*angle, angle])
+        angle = 0
+        robo.setAnglesBlocking([0, 0, angle, 2*angle, angle])
+        angle = 60
+        robo.setAnglesBlocking([0, 0, 0, angle, 2*angle])
+        angle = 0
+        robo.setAnglesBlocking([0, 0, 0, angle, 2*angle])
+        break
+
+def saveToFile(fname, angles):
+    with open(fname, "w") as f:
+        for angle in angles:
+            f.write("{},{},{},{},{}\n".format(angle[0],angle[1],angle[2],angle[3],angle[4]))
+
+def saveLine():
+    step = 1
+    start = -60
+    end = 60
+    y = 0
+    z = 50
+    angles = []
+    for x in range(start,end,step):
+        angle, outOfRange = kinematics.getAnglesRaw([x,y,z])
+        if not outOfRange:
+            angles.append(angle)
+    fname = "line_step{}start{}end{}".format(step,start,end)
+    saveToFile(fname, angles)
+
+def moveAngles(angles):
+    for angle in angles:
+        robo.setAngles(angle)
 
 try:
+    log("starting actual programm")
+    # saveLine()
     # createCircleFile()
     # for angles in readAngles():
     #     print(angles)
     #     robo.setAngles(angles)
-    # robo.chill()
+    robo.chill()
     time.sleep(2.0)
-    simpleMovementExample()
+    dance()
+
+    # robo.setAnglesBlocking([0, 0, 0, 0, 0])
+    # robo.setAnglesBlocking([0, -10, 20, -30, 40])
+    # servos[1].getAngle()
+
+    # moveAngles(getAnglesFromFile("line_step1start-60end60"))
+    # time.sleep(2.0)
+    # robo.chill()
+
+    # simpleMovementExample()
+    # auroraMoves()
 
     # robo.moveToRaw([-50,-50,0])
     # robo.moveToRaw([-60,-60,0])
@@ -172,4 +256,3 @@ try:
 except KeyboardInterrupt:
     robo.chill()
     print("end")
-
