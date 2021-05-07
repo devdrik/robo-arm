@@ -13,7 +13,11 @@ servo3 = Dynamixel(3, ser)
 servo4 = Dynamixel(4, ser)
 camServo = Dynamixel(11,ser)
 
-servos = [servo1, servo2, servo3, servo4]
+
+servos = [servo0, servo1, servo2, servo3, servo4, camServo]
+
+for servo in servos:
+    servo.setProfileVelocity(200)
 
 waitUart = 0.1
 
