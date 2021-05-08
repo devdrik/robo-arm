@@ -134,13 +134,13 @@ def getAnglesFromFile(fname):
         
 def auroraMoves():
     # robo.setVelocity(100)
-    robo.moveToRaw([30,10,60])
-    time.sleep(2.0)
-    robo.moveToRaw([120,-30,30])
-    time.sleep(2.0)
-    robo.setAngles([-120, -45, 45, 45, 45])
-    time.sleep(2.0)
-    robo.setAngles([-167, 0, 90, 80, -70])
+    robo.moveToRawBlocking([30,10,60])
+    time.sleep(1.0)
+    # robo.moveToRawBlocking([120,-30,30])
+    # time.sleep(2.0)
+    robo.setAnglesBlocking([-120, -45, 45, 45, 45])
+    time.sleep(1.0)
+    robo.setAnglesBlocking([-167, 1, 90, 80, -70])
 
 def wafe():
     # for angle in range(-50, 50, 1):
@@ -167,20 +167,40 @@ def dance():
     #         robo.setAngles([0, 0, 0, angle, 2*angle])
     #     for angle in range(59, 1, -1):
     #         robo.setAngles([0, 0, 0, angle, 2*angle])
-    robo.setVelocity(150)
+    velocity = 100
     while True:
+        robo.setVelocity(velocity)
+
+        robo.setVelocityForIndex(2, velocity*2)
         angle = 60
         robo.setAnglesBlocking([0, angle, 2*angle, angle, 0])
         angle = 0
         robo.setAnglesBlocking([0, angle, 2*angle, angle, 0])
+
+        robo.setVelocityForIndex(2, velocity)
+        robo.setVelocityForIndex(3, velocity*2)
         angle = 60
         robo.setAnglesBlocking([0, 0, angle, 2*angle, angle])
         angle = 0
         robo.setAnglesBlocking([0, 0, angle, 2*angle, angle])
+        
+        robo.setVelocityForIndex(3, velocity)
+        robo.setVelocityForIndex(4, velocity*2)
         angle = 60
         robo.setAnglesBlocking([0, 0, 0, angle, 2*angle])
         angle = 0
         robo.setAnglesBlocking([0, 0, 0, angle, 2*angle])
+
+        robo.setVelocityForIndex(1, velocity)
+        robo.setVelocityForIndex(2, velocity*2)
+        robo.setVelocityForIndex(3, velocity*2)
+        robo.setVelocityForIndex(4, velocity*2)
+        angle = 60
+        robo.setAnglesBlocking([0, angle, 2*angle, 2*angle, 2*angle])
+        angle = 0
+        robo.setAnglesBlocking([0, angle, 2*angle, 2*angle, 2*angle])
+
+        robo.setVelocity(velocity)
         break
 
 def saveToFile(fname, angles):
@@ -215,7 +235,7 @@ try:
     #     robo.setAngles(angles)
     robo.chill()
     time.sleep(2.0)
-    dance()
+    # dance()
 
     # robo.setAnglesBlocking([0, 0, 0, 0, 0])
     # robo.setAnglesBlocking([0, -10, 20, -30, 40])
@@ -226,7 +246,7 @@ try:
     # robo.chill()
 
     # simpleMovementExample()
-    # auroraMoves()
+    auroraMoves()
 
     # robo.moveToRaw([-50,-50,0])
     # robo.moveToRaw([-60,-60,0])

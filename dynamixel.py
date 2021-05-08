@@ -45,5 +45,8 @@ class Dynamixel(IServo):
         self.ser.write("{func}:{id}\n".format(func=function, id=self.id).encode("utf-8"))
         self.ser.flush()
         hasReached = int.from_bytes(self.ser.read(1), byteorder='big', signed=False)
-        log("hasReached for {}:{}".format(self.id, hasReached))
+        if hasReached == 0:
+            log("hasReached for {}:{}, angle is: {}, should: {}".format(self.id, hasReached, self.getAngle(), self.goalAngle))
+        else:
+            log("hasReached for {}:{}".format(self.id, hasReached))
         return hasReached > 0
