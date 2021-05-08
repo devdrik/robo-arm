@@ -42,20 +42,6 @@ class Robo():
         # calculate the necessary velocities to make all servos reach the goalAngle at the same time
         raise NotImplementedError
 
-    def setAnglesSmooth(self, servoIndex, angles, controlTimeInMs):
-        self.servos[servoIndex].setAngleSmooth2(angles, controlTimeInMs)
-
-    def setAnglesSmooth2(self, angles):
-        threads = []
-        for i in range(len(angles)):
-            thread = Thread(target=self.moveSmooth, args=(i, angles[i],1000,))
-            thread.start()
-            threads.append(thread)
-            # print("started thread {}".format(i))
-        for t in threads:
-            t.join()
-        # print("all threads done")
-
     def chill(self):
         for servo in self.servos:
             servo.setAngle(0)
@@ -90,14 +76,6 @@ class Robo():
     def moveBy(self, position):
         self.moveTo(self.position + position)
 
-    def moveToSmooth(self, pos):
-        angles, outOfRange = self.kinematics.getAngles(pos)
-        if not outOfRange:
-            self.setAnglesSmooth2(angles)
-
-    def moveBySmooth(self, position):
-        self.moveToSmooth(self.position + position)
-
     def setVelocity(self, velocity):
         for servo in self.servos:
             self._setVelocityForServo(servo, velocity)
@@ -109,3 +87,17 @@ class Robo():
         vel = velocity if velocity < 32767 and velocity > 0 else 0
         print("vel: ", vel)
         servo.setProfileVelocity(vel)
+
+    def startTeachMode(self):
+        for servo in self.servos:
+            servo.startTeachingMode()
+
+    def startPositionMode(self):
+        for servo in self.servos:
+            servo.startPositionMode()
+
+    def getAngles(self):
+        angles = []
+        for servo in self.servos:
+            angles.append(servo.getAngle())
+        return angles

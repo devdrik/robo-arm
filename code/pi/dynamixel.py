@@ -9,8 +9,6 @@ import struct
 
 class Dynamixel(IServo):
 
-    
-
     def __init__(self, servoId, serialDevice):
         self.ser = serialDevice
         self.id = servoId
@@ -22,8 +20,9 @@ class Dynamixel(IServo):
         self.ser.write("{func}:{id}\n".format(func=function, id=self.id).encode("utf-8"))
         self.ser.flush()
         angle = int.from_bytes(self.ser.read(1), byteorder='big', signed=False)
-        log("angle read from servo {} is {} and should be {}".format(self.id, angle, self.goalAngle))
-        return angle
+        correctedAngle = angle - 180
+        log("angle read from servo {} is {} and should be {}".format(self.id, correctedAngle, self.goalAngle))
+        return correctedAngle
 
     def setAngle(self, angle):
         function = 1
@@ -36,6 +35,7 @@ class Dynamixel(IServo):
 
     def setProfileVelocity(self, velocity):
         function = 4
+        print("writing velocity: ", velocity)
         self.ser.flush()
         self.ser.write("{func}:{id}:{vel}\n".format(func=function, id=self.id, vel=velocity).encode("utf-8"))
 
@@ -46,7 +46,16 @@ class Dynamixel(IServo):
         self.ser.flush()
         hasReached = int.from_bytes(self.ser.read(1), byteorder='big', signed=False)
         if hasReached == 0:
-            log("hasReached for {}:{}, angle is: {}, should: {}".format(self.id, hasReached, self.getAngle(), self.goalAngle))
+            pass
+            log("hasReached for {}:{}, angle is: {}, should: {}".format(self.id, hasReached, self.getAngle(), self.goalAngle-180))
         else:
             log("hasReached for {}:{}".format(self.id, hasReached))
         return hasReached > 0
+
+    def startPositionMode(self):
+        function = 7
+        self.ser.write("{func}:{id}\n".format(func=function, id=self.id).encode("utf-8"))
+
+    def startTeachingMode(self):
+        function = 8
+        self.ser.write("{func}:{id}\n".format(func=function, id=self.id).encode("utf-8"))

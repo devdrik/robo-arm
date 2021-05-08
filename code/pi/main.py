@@ -90,7 +90,7 @@ def createCircleFile():
         if not outOfRange:
             angles.append(angle)
     
-    fname = "circle_r{}_step{}_mx{}_mz{}".format(r,stepDegree,mx,mz)
+    fname = "moveFiles/circle_r{}_step{}_mx{}_mz{}".format(r,stepDegree,mx,mz)
     with open(fname, "w") as f:
         for angle in angles:
             f.write("{},{},{},{},{}\n".format(angle[0],angle[1],angle[2],angle[3],angle[4]))
@@ -115,7 +115,7 @@ def readAngles():
     return angles
 
 def getAnglesFromFile(fname):
-    with open(fname) as f:
+    with open("moveFiles/" + fname) as f:
         lines = f.readlines()
     angles = []
     # print(lines)
@@ -163,7 +163,7 @@ def dance():
     #         robo.setAngles([0, 0, 0, angle, 2*angle])
     #     for angle in range(59, 1, -1):
     #         robo.setAngles([0, 0, 0, angle, 2*angle])
-    velocity = 100
+    velocity = 50
     while True:
         robo.setVelocity(velocity)
 
@@ -200,7 +200,7 @@ def dance():
         break
 
 def saveToFile(fname, angles):
-    with open(fname, "w") as f:
+    with open("moveFiles/" + fname, "w") as f:
         for angle in angles:
             f.write("{},{},{},{},{}\n".format(angle[0],angle[1],angle[2],angle[3],angle[4]))
 
@@ -222,6 +222,66 @@ def moveAngles(angles):
     for angle in angles:
         robo.setAngles(angle)
 
+def teachPositions():
+    angles = []
+    while True:
+        robo.startTeachMode()
+        options=[
+            "[1] set Position",
+            "[2] save to file",
+            "[3] read from file",
+            "[4] play angles",
+            "[5] set speed",
+            "[6] end"
+        ]
+        menu = ""
+        for option in options:
+            menu += option + '\n'
+        menu += "your choice: "
+        inp = input(menu)
+        try:
+            inp = int(inp)
+        except:
+            continue
+        if inp == 6:
+            break
+        elif inp == 1:
+            angle = robo.getAngles()
+            angles.append(angle)
+            print(angle)
+        elif inp == 2:
+            fname = input("enter filename: ")
+            saveToFile(fname, angles)
+        elif inp == 3:
+            fname = input("enter filename: ")
+            try:
+                anglesFromFile = getAnglesFromFile(fname)
+                angles = anglesFromFile
+            except:
+                print("Error, filename not existent?")
+        elif inp == 4:
+            robo.startPositionMode()
+            robo.setVelocity(getVelocityInput())
+            for angle in angles:
+                robo.setAnglesBlocking(angle)
+        elif inp == 5:
+            vel = getVelocityInput()
+            robo.startPositionMode()
+            robo.setVelocity(vel)
+    
+def getVelocityInput():
+    while True:
+        vel = input("enter velocity: ")
+        try:
+            vel = int(vel)
+        except:
+            print("Not a number, try again")
+            continue
+        break
+    return vel
+
+
+
 try:
     log("starting actual programm")
     # saveLine()
@@ -242,7 +302,9 @@ try:
     # robo.chill()
 
     # simpleMovementExample()
-    auroraMoves()
+    # auroraMoves()
+    teachPositions()
+    # dance()
 
     # robo.moveToRaw([-50,-50,0])
     # robo.moveToRaw([-60,-60,0])
@@ -270,5 +332,6 @@ try:
     # robo.setAngleFor(1,5)
 
 except KeyboardInterrupt:
+    robo.startPositionMode()
     robo.chill()
     print("end")
