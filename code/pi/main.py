@@ -8,16 +8,12 @@ import imutils
 from myutils import map
 import math
 from myLogger import log
-from servo import Servo
-from adafruit_servokit import ServoKit
 from dynamixel import Dynamixel
 
 import serial
 ser = serial.Serial('/dev/ttyACM0', 115200, timeout=1)
 ser.flush()
 
-# kit = ServoKit(channels=16)
-# servos = [Servo(0, (-180, 180), kit, lock), Servo(1, (-90, 90), kit, lock,5), Servo(2, (-90, 90), kit, lock, -5, True), Servo(3, (-90, 90), kit, lock,7), Servo(4, (-90, 90), kit, lock, True)]
 servos = [Dynamixel(0, ser), Dynamixel(1, ser), Dynamixel(2, ser), Dynamixel(3, ser), Dynamixel(4, ser)]
 robo = Robo(servos)
 

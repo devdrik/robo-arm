@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 import serial
 from time import sleep
-from IServo import IServo
+from interfaces.IServo import IServo
 from myLogger import log
 
 import struct
