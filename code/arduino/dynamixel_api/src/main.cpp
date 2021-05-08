@@ -38,6 +38,9 @@ const char msgEndChar = '\n';
 #define FUNC_SET_PROFILE_VELOCITY 4
 #define FUNC_SET_PROFILE_VELOCITY_ALL 5
 #define FUNC_HAS_REACHED_ANGLE 6
+#define FUNC_SET_POSITION_MODE_ALL 7
+#define FUNC_TORQUE_OFF_ALL 8
+
 
 //This namespace is required to use Control table item names
 using namespace ControlTableItem;
@@ -68,6 +71,23 @@ void setProfileVelocityAll(uint32_t velocity) {
   for (uint8_t id : servosIDs) {
     writeToControlTable(id, PROFILE_VELOCITY, velocity);
   }
+}
+
+bool hasReachedGoalAngle(uint8_t servoId) {
+  float offset = 3;
+  float currentAngle = getAngle(servoId);
+  return currentAngle >= goalAngles[servoId] - offset &&
+          currentAngle <= goalAngles[servoId] + offset;
+}
+
+void setOperatingMode(uint8_t servoID, uint8_t mode) {
+  dxl.torqueOff(servoID);
+  dxl.setOperatingMode(servoID, mode);
+  dxl.torqueOn(servoID);
+}
+
+void torqueOff(uint8_t servoID) {
+  dxl.torqueOff(servoID);
 }
 
 void setup() {
@@ -102,13 +122,6 @@ void setup() {
   }
 }
 
-bool hasReachedGoalAngle(uint8_t servoId) {
-  float offset = 3;
-  float currentAngle = getAngle(servoId);
-  return currentAngle >= goalAngles[servoId] - offset &&
-          currentAngle <= goalAngles[servoId] + offset;
-}
-
 // FUNC:PARAM1:PARAMX\n
 
 void loop() {
@@ -136,7 +149,7 @@ void loop() {
       break;
 
     case FUNC_SET_ANGLE_FOUR:
-    // FUNC
+    // FUNC:ANGLE1:ANGLE2:ANGLE3:ANGLE4
       setAngle(1, Serial.readStringUntil(separator).toFloat());
       setAngle(2, Serial.readStringUntil(separator).toFloat());
       setAngle(3, Serial.readStringUntil(separator).toFloat());
@@ -162,6 +175,18 @@ void loop() {
       bool hasReachedAngle;
       hasReachedAngle = hasReachedGoalAngle(id);
       DATA_SERIAL.write(hasReachedAngle ? 1 : 0);
+      break;
+
+    case FUNC_SET_POSITION_MODE_ALL:
+      // FUNC:ID
+      id = Serial.readStringUntil(msgEndChar).toInt();
+      setOperatingMode(id, OP_POSITION);
+      break;
+
+    case FUNC_TORQUE_OFF_ALL:
+      // FUNC:ID
+      id = Serial.readStringUntil(msgEndChar).toInt();
+      torqueOff(id);
       break;
 
     default:
