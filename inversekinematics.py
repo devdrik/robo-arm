@@ -12,7 +12,7 @@ class InverseKinematics():
         self.armLength = 4
         self.smallArmLength = 4
         lim = math.pi/4
-        lim2 = 7*math.pi/9
+        # lim = 7*math.pi/9
         self.chain = Chain(name='arm', links=[
             OriginLink(
             ),
@@ -35,21 +35,21 @@ class InverseKinematics():
             translation_vector=[0, 0, self.armLength],
             orientation=[0, 0, 0],
             rotation=[0, -1, 0],
-            bounds=(-lim2,lim2)
+            bounds=(-lim,lim)
             ),
             URDFLink(
             name="third",
             translation_vector=[0, 0, self.armLength],
             orientation=[0, 0, 0],
             rotation=[0, 1, 0],
-            bounds=(-lim2,lim2)
+            bounds=(-lim,lim)
             ),
             URDFLink(
             name="fourth",
             translation_vector=[0, 0, self.armLength],
             orientation=[0, 0, 0],
             rotation=[0, -1, 0],
-            bounds=(-lim2,lim2)
+            bounds=(-lim,lim)
             ),
             URDFLink(
             name="tip",
