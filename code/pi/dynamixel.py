@@ -19,7 +19,15 @@ class Dynamixel(IServo):
         function = 2
         self.ser.write("{func}:{id}\n".format(func=function, id=self.id).encode("utf-8"))
         self.ser.flush()
-        angle = int.from_bytes(self.ser.read(1), byteorder='big', signed=False)
+        myByte = []
+        for k in range(4):
+            myByte.append(int.from_bytes(self.ser.read(1), byteorder='big', signed=False))
+            print(f'byte[{k}]={myByte[k]}')
+
+        angle= struct.unpack('<f', bytearray(myByte))[0]
+        print(f'floatAngle={angle}')
+
+        # angle = int.from_bytes(self.ser.read(1), byteorder='big', signed=False)
         correctedAngle = angle - 180
         log("angle read from servo {} is {} and should be {}".format(self.id, correctedAngle, self.goalAngle))
         return correctedAngle
@@ -47,7 +55,7 @@ class Dynamixel(IServo):
         hasReached = int.from_bytes(self.ser.read(1), byteorder='big', signed=False)
         if hasReached == 0:
             pass
-            log("hasReached for {}:{}, angle is: {}, should: {}".format(self.id, hasReached, self.getAngle(), self.goalAngle-180))
+            # log("hasReached for {}:{}, angle is: {}, should: {}".format(self.id, hasReached, self.getAngle(), self.goalAngle-180))
         else:
             log("hasReached for {}:{}".format(self.id, hasReached))
         return hasReached > 0
