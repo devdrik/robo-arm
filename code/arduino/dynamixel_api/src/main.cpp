@@ -90,6 +90,15 @@ void torqueOff(uint8_t servoID) {
   dxl.torqueOff(servoID);
 }
 
+void floatToByte(byte* arr, float value) {
+      long l = *(long*) &value;
+
+      arr[0] = l & 0x00FF;
+      arr[1] = (l >> 8) & 0x00FF;
+      arr[2] = (l >> 16) & 0x00FF;
+      arr[3] = l >> 24;
+}
+
 void setup() {
   // put your setup code here, to run once:
   
@@ -145,7 +154,9 @@ void loop() {
       // FUNC:ID
       id = Serial.readStringUntil(msgEndChar).toInt();
       angle = getAngle(id);
-      DATA_SERIAL.write(angle);
+      byte angleBytes[4];
+      floatToByte(angleBytes, angle);
+      DATA_SERIAL.write(angleBytes, 4);
       break;
 
     case FUNC_SET_ANGLE_FOUR:
