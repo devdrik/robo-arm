@@ -17,13 +17,14 @@ class Dynamixel(IServo):
 
     def getAngle(self):
         function = 2
+        self.ser.flush()
         self.ser.write("{func}:{id}\n".format(func=function, id=self.id).encode("utf-8"))
         self.ser.flush()
         myByte = []
         for k in range(4):
             myByte.append(int.from_bytes(self.ser.read(1), byteorder='big', signed=False))
             print(f'byte[{k}]={myByte[k]}')
-
+        self.ser.flush()
         angle= struct.unpack('<f', bytearray(myByte))[0]
         print(f'floatAngle={angle}')
 
@@ -38,7 +39,8 @@ class Dynamixel(IServo):
         self.goalAngle = correctedAngle
         log("setting {} to {}".format(self.id,correctedAngle))
         self.ser.flush()
-        self.ser.write("{func}:{id}:{ang}\n".format(func=function, id=self.id, ang=correctedAngle).encode("utf-8"))
+        self.ser.write("{func}:{id}:{ang:.2f}\n".format(func=function, id=self.id, ang=correctedAngle).encode("utf-8"))
+        self.ser.flush()
         # sleep(0.01)
 
     def setProfileVelocity(self, velocity):
@@ -50,6 +52,7 @@ class Dynamixel(IServo):
     def hasReachedAngle(self):
         # hasReached = self.goalAngle - self.offset  <= self.getAngle() <= self.goalAngle + self.offset
         function = 6
+        self.ser.flush()
         self.ser.write("{func}:{id}\n".format(func=function, id=self.id).encode("utf-8"))
         self.ser.flush()
         hasReached = int.from_bytes(self.ser.read(1), byteorder='big', signed=False)

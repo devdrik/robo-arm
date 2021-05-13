@@ -123,7 +123,7 @@ def getAnglesFromFile(fname):
         lineValues = []
         for value in line.split(','):
             if value.endswith("\n"):
-                value=value[:-2]
+                value=value[:-1]
             lineValues.append(float(value))
         angles.append(lineValues)
     return angles
@@ -263,7 +263,9 @@ def teachPositions():
             robo.startPositionMode()
             robo.setVelocity(getVelocityInput())
             for angle in angles:
-                robo.setAnglesBlocking(angle)
+                # robo.setAnglesBlocking(angle)
+                robo.setAngles(angle)
+                time.sleep(2)
         elif inp == 5:
             vel = getVelocityInput()
             robo.startPositionMode()
@@ -280,7 +282,16 @@ def getVelocityInput():
         break
     return vel
 
-
+def hello():
+    robo.setAngles([-90,0,0,0,0])
+    time.sleep(4)
+    robo.setAngles([-90,0,0,0,90])
+    time.sleep(1)
+    robo.setAngles([-160,0,0,0,90])
+    time.sleep(1)
+    robo.setAngles([0,0,0,0,90])
+    time.sleep(1)
+    robo.setAngles([-70,-20,20,-20,20])
 
 try:
     log("starting actual programm")
@@ -290,7 +301,7 @@ try:
     #     print(angles)
     #     robo.setAngles(angles)
     robo.chill()
-    time.sleep(2.0)
+    # time.sleep(2.0)
     # dance()
 
     # robo.setAnglesBlocking([0, 0, 0, 0, 0])
@@ -305,6 +316,8 @@ try:
     # auroraMoves()
     teachPositions()
     # dance()
+    # hello()
+
 
     # robo.moveToRaw([-50,-50,0])
     # robo.moveToRaw([-60,-60,0])
