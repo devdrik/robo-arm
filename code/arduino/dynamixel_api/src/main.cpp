@@ -40,6 +40,7 @@ const char msgEndChar = '\n';
 #define FUNC_HAS_REACHED_ANGLE 6
 #define FUNC_SET_POSITION_MODE_ALL 7
 #define FUNC_TORQUE_OFF_ALL 8
+#define FUNC_IS_MOVING 9
 
 
 //This namespace is required to use Control table item names
@@ -99,15 +100,21 @@ void floatToByte(byte* arr, float value) {
       arr[3] = l >> 24;
 }
 
+bool isMoving(uint8_t servoID) {
+  int moving_status = dxl.readControlTableItem(MOVING_STATUS, servoID);
+  int mask = 2;
+  return (moving_status & mask) > 0;
+}
+
 void setup() {
   // put your setup code here, to run once:
   
   // For Uno, Nano, Mini, and Mega, use UART port of DYNAMIXEL Shield to debug.
-  DEBUG_SERIAL.begin(SERIAL_BAUD);
-  while(!DEBUG_SERIAL);
-  if (DATA_SERIAL != DEBUG_SERIAL) {
-    DATA_SERIAL.begin(SERIAL_BAUD);
-  }
+  DATA_SERIAL.begin(SERIAL_BAUD);
+  // while(!DEBUG_SERIAL);
+  // if (DATA_SERIAL != DEBUG_SERIAL) {
+  //   DEBUG_SERIAL.begin(SERIAL_BAUD);
+  // }
 
   // Set Port baudrate to 57600bps. This has to match with DYNAMIXEL baudrate.
   dxl.begin(57600);
@@ -120,13 +127,13 @@ void setup() {
       dxl.torqueOff(servoID);
       dxl.setOperatingMode(servoID, OP_POSITION);
       dxl.torqueOn(servoID);
-      DEBUG_SERIAL.print("Servo ");
-      DEBUG_SERIAL.print(servoID);
-      DEBUG_SERIAL.println(" set to Position Mode");
+      // DEBUG_SERIAL.print("Servo ");
+      // DEBUG_SERIAL.print(servoID);
+      // DEBUG_SERIAL.println(" set to Position Mode");
     } else {
-      DEBUG_SERIAL.print("Servo ");
-      DEBUG_SERIAL.print(servoID);
-      DEBUG_SERIAL.println(" not responding");
+      // DEBUG_SERIAL.print("Servo ");
+      // DEBUG_SERIAL.print(servoID);
+      // DEBUG_SERIAL.println(" not responding");
     }
   }
 }
@@ -136,7 +143,7 @@ void setup() {
 void loop() {
 
   if ( DATA_SERIAL.available() > 0 ) {
-    uint8_t function = Serial.readStringUntil(separator).toInt();
+    uint8_t function = DATA_SERIAL.readStringUntil(separator).toInt();
     uint8_t id;
     float angle;
     uint32_t profileVelocity;
@@ -145,14 +152,16 @@ void loop() {
     {
     case FUNC_SET_ANGLE:
       // FUNC:ID:ANGLE
-      id = Serial.readStringUntil(separator).toInt();
-      angle = Serial.readStringUntil(msgEndChar).toFloat();
+      id = DATA_SERIAL.readStringUntil(separator).toInt();
+      angle = DATA_SERIAL.readStringUntil(msgEndChar).toFloat();
+      // Serial.print("Angle read and converted from string: ");
+      // Serial.println(angle);
       setAngle(id, angle);
       break;
     
     case FUNC_GET_ANGLE:
       // FUNC:ID
-      id = Serial.readStringUntil(msgEndChar).toInt();
+      id = DATA_SERIAL.readStringUntil(msgEndChar).toInt();
       angle = getAngle(id);
       byte angleBytes[4];
       floatToByte(angleBytes, angle);
@@ -161,43 +170,53 @@ void loop() {
 
     case FUNC_SET_ANGLE_FOUR:
     // FUNC:ANGLE1:ANGLE2:ANGLE3:ANGLE4
-      setAngle(1, Serial.readStringUntil(separator).toFloat());
-      setAngle(2, Serial.readStringUntil(separator).toFloat());
-      setAngle(3, Serial.readStringUntil(separator).toFloat());
-      setAngle(4, Serial.readStringUntil(msgEndChar).toFloat());
+      setAngle(1, DATA_SERIAL.readStringUntil(separator).toFloat());
+      setAngle(2, DATA_SERIAL.readStringUntil(separator).toFloat());
+      setAngle(3, DATA_SERIAL.readStringUntil(separator).toFloat());
+      setAngle(4, DATA_SERIAL.readStringUntil(msgEndChar).toFloat());
       break;
 
     case FUNC_SET_PROFILE_VELOCITY:
       // FUNC:ID:VELOCITY
-      id = Serial.readStringUntil(separator).toInt();
-      profileVelocity = Serial.readStringUntil(msgEndChar).toInt();
+      id = DATA_SERIAL.readStringUntil(separator).toInt();
+      profileVelocity = DATA_SERIAL.readStringUntil(msgEndChar).toInt();
       setProfileVelocity(id, profileVelocity);
       break;
 
     case FUNC_SET_PROFILE_VELOCITY_ALL:
       // FUNC:VELOCITY
-      profileVelocity = Serial.readStringUntil(msgEndChar).toInt();
+      profileVelocity = DATA_SERIAL.readStringUntil(msgEndChar).toInt();
       setProfileVelocityAll(profileVelocity);
       break;
 
     case FUNC_HAS_REACHED_ANGLE:
       // FUNC:ID
-      id = Serial.readStringUntil(msgEndChar).toInt();
+      id = DATA_SERIAL.readStringUntil(msgEndChar).toInt();
       bool hasReachedAngle;
       hasReachedAngle = hasReachedGoalAngle(id);
-      DATA_SERIAL.write(hasReachedAngle ? 1 : 0);
+      byte hasReached;
+      hasReached = hasReachedAngle ? (byte) 1 : (byte) 0;
+      DATA_SERIAL.write(hasReached);
       break;
 
     case FUNC_SET_POSITION_MODE_ALL:
       // FUNC:ID
-      id = Serial.readStringUntil(msgEndChar).toInt();
+      id = DATA_SERIAL.readStringUntil(msgEndChar).toInt();
       setOperatingMode(id, OP_POSITION);
       break;
 
     case FUNC_TORQUE_OFF_ALL:
       // FUNC:ID
-      id = Serial.readStringUntil(msgEndChar).toInt();
+      id = DATA_SERIAL.readStringUntil(msgEndChar).toInt();
       torqueOff(id);
+      break;
+
+    case FUNC_IS_MOVING:
+      // FUNC:ID
+      id = DATA_SERIAL.readStringUntil(msgEndChar).toInt();
+      byte isMovingByte; 
+      isMovingByte = (byte)(isMoving(id) ? 1 : 0);
+      DATA_SERIAL.write(isMovingByte);
       break;
 
     default:
