@@ -13,6 +13,7 @@ from dynamixel import Dynamixel
 import serial
 ser = serial.Serial('/dev/ttyACM0', 115200, timeout=1)
 ser.flush()
+s = Dynamixel(4, ser)
 
 servos = [Dynamixel(0, ser), Dynamixel(1, ser), Dynamixel(2, ser), Dynamixel(3, ser), Dynamixel(4, ser)]
 robo = Robo(servos)
@@ -232,7 +233,8 @@ def teachPositions():
             "[3] read from file",
             "[4] play angles",
             "[5] set speed",
-            "[6] end"
+            "[6] add pause",
+            "[7] end"
         ]
         menu = ""
         for option in options:
@@ -243,7 +245,7 @@ def teachPositions():
             inp = int(inp)
         except:
             continue
-        if inp == 6:
+        if inp == 7:
             break
         elif inp == 1:
             angle = robo.getAngles()
@@ -263,14 +265,26 @@ def teachPositions():
             robo.startPositionMode()
             robo.setVelocity(getVelocityInput())
             for angle in angles:
-                # robo.setAnglesBlocking(angle)
-                robo.setAngles(angle)
-                time.sleep(2)
+                robo.setAnglesBlocking(angle)
+                # robo.setAngles(angle)
+                time.sleep(0.5)
         elif inp == 5:
             vel = getVelocityInput()
             robo.startPositionMode()
             robo.setVelocity(vel)
-    
+
+
+def getPauseInput():
+    while True:
+        val = input("enter pause in s: ")
+        try:
+            val = float(val)
+        except:
+            print("Not a number, try again")
+            continue
+        break
+    return val
+
 def getVelocityInput():
     while True:
         vel = input("enter velocity: ")
