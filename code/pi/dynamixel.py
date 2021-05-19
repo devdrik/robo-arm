@@ -6,47 +6,82 @@ from myLogger import log
 
 import struct
 
+FUNC_SET_ANGLE = 1
+FUNC_GET_ANGLE = 2
+FUNC_SET_ANGLE_FOUR = 3
+FUNC_SET_PROFILE_VELOCITY = 4
+FUNC_SET_PROFILE_VELOCITY_ALL = 5
+FUNC_HAS_REACHED_ANGLE = 6
+FUNC_SET_POSITION_MODE_ALL = 7
+FUNC_TORQUE_OFF_ALL = 8
+FUNC_IS_MOVING = 9
 
 class Dynamixel(IServo):
-
-    
 
     def __init__(self, servoId, serialDevice):
         self.ser = serialDevice
         self.id = servoId
-        self.goalAngle = 0
-        self.offset = 1
+        self.goalAngle = 0.0
+        self.angleOffset = 180.0
 
     def getAngle(self):
-        function = 2
-        self.ser.write("{func}:{id}\n".format(func=function, id=self.id).encode("utf-8"))
-        self.ser.flush()
-        angle = int.from_bytes(self.ser.read(1), byteorder='big', signed=False)
-        log("angle read from servo {} is {} and should be {}".format(self.id, angle, self.goalAngle))
-        return angle
+        function = FUNC_GET_ANGLE
+        message = f'{function}:{self.id}\n'.encode("utf-8")
+        self.ser.write(message)
+        readBytes = self.ser.read(4)
+        angle = struct.unpack('<f', readBytes)[0]
+
+        correctedAngle = angle - self.angleOffset
+        # log(f'angle read from servo {self.id} is {correctedAngle} and should be {self.goalAngle}')
+        return correctedAngle
 
     def setAngle(self, angle):
-        function = 1
-        correctedAngle = angle + 180
-        self.goalAngle = correctedAngle
-        log("setting {} to {}".format(self.id,correctedAngle))
-        self.ser.flush()
-        self.ser.write("{func}:{id}:{ang}\n".format(func=function, id=self.id, ang=correctedAngle).encode("utf-8"))
-        # sleep(0.01)
+        function = FUNC_SET_ANGLE
+        correctedAngle = angle + self.angleOffset
+        self.goalAngle = angle
+        log(f'setting {self.id} to {angle}')
+        message = f'{function}:{self.id}:{correctedAngle:.2f}\n'.encode("utf-8")
+        self.ser.write(message)
 
     def setProfileVelocity(self, velocity):
-        function = 4
-        self.ser.flush()
+        function = FUNC_SET_PROFILE_VELOCITY
         self.ser.write("{func}:{id}:{vel}\n".format(func=function, id=self.id, vel=velocity).encode("utf-8"))
 
     def hasReachedAngle(self):
-        # hasReached = self.goalAngle - self.offset  <= self.getAngle() <= self.goalAngle + self.offset
-        function = 6
-        self.ser.write("{func}:{id}\n".format(func=function, id=self.id).encode("utf-8"))
-        self.ser.flush()
-        hasReached = int.from_bytes(self.ser.read(1), byteorder='big', signed=False)
+        # USING HASREACHEDANGLE FROM ARDUINO
+        # function = 6
+        # message = f'{function}:{self.id}\n'.encode("utf-8")
+        # self.ser.write(message)
+        # answer = self.ser.read(1)
+        # log(f'servo {self.id} answer: {answer}')
+        # hasReached = int.from_bytes(answer, byteorder='big', signed=False)
+        # log(f'{hasReached}')
+        # if hasReached > 0:
+        #     log(f'servo {self.id} has reached goal angle of {self.goalAngle}')
+        # return hasReached > 0
+        # USING LOCAL CALCULATED HASREACHEDANGLE
+        # currentAngle = self.getAngle()
+        # allowedError = 4
+        # hasReached = currentAngle <= self.goalAngle + allowedError and currentAngle >= self.goalAngle - allowedError
+        # if hasReached:
+        #     log(f'servo {self.id} hasReached position. {currentAngle}/{self.goalAngle}')
+        # return hasReached
+        # USING ISMOVING FROM ARDUINO
+        function = FUNC_IS_MOVING
+        message = f'{function}:{self.id}\n'.encode("utf-8")
+        self.ser.write(message)
+        isMovingByte = self.ser.read(1)
+        hasReached = int.from_bytes(isMovingByte, byteorder='big', signed=False)
         if hasReached == 0:
-            log("hasReached for {}:{}, angle is: {}, should: {}".format(self.id, hasReached, self.getAngle(), self.goalAngle))
-        else:
-            log("hasReached for {}:{}".format(self.id, hasReached))
-        return hasReached > 0
+            log(f'servo {self.id} has reached goal angle of {self.goalAngle}')
+        return hasReached == 0
+
+    def startPositionMode(self):
+        function = FUNC_SET_POSITION_MODE_ALL
+        message = f'{function}:{self.id}\n'.encode("utf-8")
+        self.ser.write(message)
+
+    def startTeachingMode(self):
+        function = FUNC_TORQUE_OFF_ALL
+        message = f'{function}:{self.id}\n'.encode("utf-8")
+        self.ser.write(message)
