@@ -21,6 +21,11 @@ pip install ikpy
 The files to print can be found in the cad section. They should be easy prints, nothing special here. 
 
 
+## Configuration
+
+You need to define the serial device in ```main.py```. This device is the arduino with the API.
+
+
 ## Usage
 
 There is not yet a GUI or any other interface. You need to open the main file and write some code in order to get results. The easiest way is to comment in an example. Usually you want to use the API of robo.py to interact with the arm and the API of inversekinematics.py to calculate the input (angles) for the robo API.
