@@ -14,12 +14,15 @@ from roboMoves import RoboMoves
 from robocli import RoboCLI
 
 import serial
-ser = serial.Serial('/dev/ttyACM0', 115200, timeout=1)
+
+serialPort = '/dev/ttyACM0'
+ser = serial.Serial(serialPort, 115200, timeout=1)
 ser.flush()
 
 servos = [Dynamixel(0, ser), Dynamixel(1, ser), Dynamixel(2, ser), Dynamixel(3, ser), Dynamixel(4, ser)]
-robo = Robo(servos)
 kinematics = InverseKinematics()
+robo = Robo(servos, kinematics)
+
 moves = RoboMoves(robo, kinematics)
 fileHandler = FileHandler()
 cli = RoboCLI(robo, fileHandler)
@@ -92,7 +95,7 @@ try:
     # robo.moveToRaw([-50,-30,50])
     # moveWithCV(showMovie=True)
     # robo.moveToRaw([0.1,-60,30])
-    # robo.setAngleFor(1,5)
+    # robo.setAngleForServo(1,5)
 
 except KeyboardInterrupt:
     robo.startPositionMode()

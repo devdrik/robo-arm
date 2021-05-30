@@ -1,23 +1,16 @@
-import RPi.GPIO as GPIO
 import time
-import myutils
-from threading import Thread
-from threading import Lock
-from inversekinematics import InverseKinematics
 from myLogger import log
+
 
 class Robo():
 
-    def __init__(self, servos):
-        
-        lock = Lock()
-        self.kinematics = InverseKinematics()
+    def __init__(self, servos, kinematics):
+        self.kinematics = kinematics
         self.servos = servos
         angles = []
         for servo in self.servos:
             angles.append(servo.getAngle())
         self.position = self.kinematics.getPosition(angles)
-        # print("üpsition: {}".format(self.position))
             
     def __del__(self):
         pass
@@ -27,8 +20,8 @@ class Robo():
             self.servos[i].setAngle(angles[i])
 
     def setAnglesBlocking(self, angles, timeout=5):
-        for i in range(len(angles)):
-            self.servos[i].setAngle(angles[i])
+        allServosReachedAngle = False
+        self.setAngles(angles)
         done = [False for n in self.servos]
         startTime = time.time()
         while time.time() - startTime < timeout:
@@ -36,45 +29,34 @@ class Robo():
                 if not done[i]:
                     done[i] = self.servos[i].hasReachedAngle()
             if all(i for i in done):
+                allServosReachedAngle = True
                 break
-
-    def setAnglesEqualized(self, angles):
-        # calculate the necessary velocities to make all servos reach the goalAngle at the same time
-        raise NotImplementedError
+        return allServosReachedAngle
 
     def chill(self):
         for servo in self.servos:
             servo.setAngle(0)
 
-    def setAngleAll(self, angle):
+    def setAngleForAllServos(self, angle):
         for servo in self.servos:
             servo.setAngle(angle)
     
-    def setAngleFor(self, servo, angle):
-        self.servos[servo].setAngle(angle)
+    def setAngleForServo(self, servoId, angle):
+        self.servos[servoId].setAngle(angle)
 
-    def moveTo(self, pos):
-        angles, outOfRange = self.kinematics.getAngles(pos)
-        if not outOfRange:
-            self.setAngles(angles)
+    def moveToPosition(self, pos):
+        self._moveToPosition(pos, self.setAngles)
 
-    def moveToRaw(self, pos):
-        self._moveToRaw(pos, self.setAngles)
+    def moveToPositionBlocking(self, pos):
+        self._moveToPosition(pos, self.setAnglesBlocking)
 
-    def moveToRawBlocking(self, pos):
-        self._moveToRaw(pos, self.setAnglesBlocking)
-
-    def _moveToRaw(self, pos, setAngles):
-        # startTime = time.time()
+    def _moveToPosition(self, pos, setAngles):
         angles, outOfRange = self.kinematics.getAnglesRaw(pos)
-        # log("elapsed time: {}".format(time.time() - startTime))
         if not outOfRange:
             setAngles(angles)
         else:
             log("out of range!", "ERR")
-
-    def moveBy(self, position):
-        self.moveTo(self.position + position)
+        return outOfRange
 
     def setVelocity(self, velocity):
         for servo in self.servos:
@@ -85,7 +67,6 @@ class Robo():
 
     def _setVelocityForServo(self, servo, velocity):
         vel = velocity if velocity < 32767 and velocity > 0 else 0
-        print("vel: ", vel)
         servo.setProfileVelocity(vel)
 
     def startTeachMode(self):
