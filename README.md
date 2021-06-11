@@ -4,6 +4,8 @@ This repo is all about the little robo arm. The community named it **Serworm Mic
 
 The project is work in progress, but it already works. I am very happy, if you add features, refactor the code or point out bad practices. Feel free to open an issue, a pull-request or contact me.
 
+You can find a more detailed (german) description here: [devdrik.de/robo-arm](https://devdrik.de/robo-arm/)
+
 ## Material
 
 You wont need much, but you need something for this robo. Here is a list:
@@ -13,6 +15,8 @@ You wont need much, but you need something for this robo. Here is a list:
 * 1 Raspberry Pi
 * USB-a to micro USB cable
 * A 3D-Printer could help
+
+Find product links here: [devdrik.de/hardware-von-serworm-michael](https://devdrik.de/hardware-von-serworm-michael/)
 
 ## Setup
 
@@ -50,5 +54,7 @@ You need to define the serial device in ```main.py```. This device is the arduin
 There is not yet a GUI or any other interface. You need to open the main file and write some code in order to get results. The easiest way is to comment in an example. Usually you want to use the API of robo.py to interact with the arm and the API of inversekinematics.py to calculate the input (angles) for the robo API.
 
 You can also use the `teachposition` function to get a little cli and teach the arm some positions and save those for later.
+
+There might be some helpful (german) articles on my blog: [devdrik.de/robo-arm](https://devdrik.de/robo-arm/)
 
 # HAVE FUN!
