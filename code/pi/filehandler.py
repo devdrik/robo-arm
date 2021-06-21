@@ -14,7 +14,7 @@ class FileHandler():
                 else:
                     f.write("{},{},{},{},{}\n".format(action[0],action[1],action[2],action[3],action[4]))
 
-    def getAnglesFromFile(self, fname):
+    def getActionsFromFile(self, fname):
         with open("moveFiles/" + fname) as f:
             lines = f.readlines()
         angles = []

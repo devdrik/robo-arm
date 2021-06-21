@@ -7,7 +7,7 @@ class RoboCLI():
         self.fileHandler = fileHandler
     
     def startCli(self):
-        angles = []
+        actions = []
         while True:
             self.robo.startTeachMode()
             menu = self.__getMenu()
@@ -19,41 +19,43 @@ class RoboCLI():
             except:
                 continue
             if inp == 1:
-                angle = self.robo.getAngles()
-                angles.append(angle)
-                print(angle)
+                action = self.robo.getAngles()
+                actions.append(action)
+                print(action)
             elif inp == 2:
                 fname = input("enter filename: ")
-                self.fileHandler.saveToFile(fname, angles)
+                self.fileHandler.saveToFile(fname, actions)
             elif inp == 3:
                 fname = input("enter filename: ")
                 try:
-                    anglesFromFile = self.fileHandler.getAnglesFromFile(fname)
-                    angles.extend(anglesFromFile)
+                    actionsFromFile = self.fileHandler.getActionsFromFile(fname)
+                    actions.extend(actionsFromFile)
                 except:
                     print("Error, filename not existent?")
             elif inp == 4:
                 self.robo.startPositionMode()
                 self.robo.setVelocity(self.__getVelocityInput())
-                for angle in angles:
-                    if angle[0] == 'vel':
-                        self.robo.setVelocity(angle[1])
+                for action in actions:
+                    if action[0] == 'vel':
+                        self.robo.setVelocity(action[1])
+                    elif action[0] == 'pause':
+                        time.sleep(action[1])
                     else:
-                        self.robo.setAnglesBlocking(angle)
+                        self.robo.setAnglesBlocking(action)
                         # self.robo.setAngles(angle)
                         time.sleep(0.1)
             elif inp == 5:
-                angles = []
+                actions = []
             elif inp == 6:
                 entry = []
                 entry.append('vel')
                 entry.append(self.__getVelocityInput())
-                angles.append(entry)
+                actions.append(entry)
             elif inp == 7:
                 entry = []
                 entry.append('pause')
-                entry.append(self.__getFloatInput("enter pause in [s]"))
-                angles.append(entry)
+                entry.append(self.__getFloatInput("enter pause in [s]: "))
+                actions.append(entry)
 
     def __getMenu(self):
         menu = ""
