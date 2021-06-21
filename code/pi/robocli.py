@@ -49,6 +49,11 @@ class RoboCLI():
                 entry.append('vel')
                 entry.append(self.__getVelocityInput())
                 angles.append(entry)
+            elif inp == 7:
+                entry = []
+                entry.append('pause')
+                entry.append(self.__getFloatInput("enter pause in [s]"))
+                angles.append(entry)
 
     def __getMenu(self):
         menu = ""
@@ -65,6 +70,7 @@ class RoboCLI():
             "[4] play angles",
             "[5] clear angles",
             "[6] change velocity",
+            "[7] add pause",
             "[q] end"
         ]
         return options
@@ -79,3 +85,14 @@ class RoboCLI():
                 continue
             break
         return vel
+
+    def __getFloatInput(self, request="enter float value: "):
+        while True:
+            val = input(request)
+            try:
+                val = float(val)
+            except:
+                print("Not a number, try again")
+                continue
+            break
+        return val
