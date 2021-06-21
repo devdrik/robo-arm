@@ -3,16 +3,16 @@
 class FileHandler():
 
     def __init__(self):
-        self.velocityIdentifier = 'vel'
+        self.__velocityIdentifier = 'vel'
+        self.__pauseIdentifier = 'pause'
 
-    def saveToFile(self, fname, angles):
+    def saveToFile(self, fname, actionsList):
         with open("moveFiles/" + fname, "w") as f:
-            for angle in angles:
-                if angle[0] == self.velocityIdentifier:
-                    f.write(f'{angle[0]}:{angle[1]}\n')
+            for action in actionsList:
+                if action[0] == self.__velocityIdentifier or action[0] == self.__pauseIdentifier:
+                    f.write(f'{action[0]}:{action[1]}\n')
                 else:
-                    f.write("{},{},{},{},{}\n".format(angle[0],angle[1],angle[2],angle[3],angle[4]))
-
+                    f.write("{},{},{},{},{}\n".format(action[0],action[1],action[2],action[3],action[4]))
 
     def getAnglesFromFile(self, fname):
         with open("moveFiles/" + fname) as f:
@@ -21,7 +21,7 @@ class FileHandler():
         # print(lines)
         for line in lines:
             lineValues = []
-            if line.startswith(self.velocityIdentifier):
+            if line.startswith(self.__velocityIdentifier) or line.startswith(self.__pauseIdentifier):
                 values = line.split(':')
                 lineValues.append(values[0])
                 lineValues.append(float(values[1]))
