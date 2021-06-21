@@ -36,9 +36,12 @@ class RoboCLI():
                 self.robo.startPositionMode()
                 self.robo.setVelocity(self.__getVelocityInput())
                 for angle in angles:
-                    self.robo.setAnglesBlocking(angle)
-                    # self.robo.setAngles(angle)
-                    time.sleep(0.1)
+                    if angle[0] == 'vel':
+                        self.robo.setVelocity(angle[1])
+                    else:
+                        self.robo.setAnglesBlocking(angle)
+                        # self.robo.setAngles(angle)
+                        time.sleep(0.1)
             elif inp == 5:
                 angles = []
 
