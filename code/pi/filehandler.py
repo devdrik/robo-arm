@@ -21,14 +21,14 @@ class FileHandler():
         # print(lines)
         for line in lines:
             lineValues = []
-            if line.startsWith(self.velocityIdentifier):
+            if line.startswith(self.velocityIdentifier):
                 values = line.split(':')
                 lineValues.append(values[0])
                 lineValues.append(float(values[1]))
-                angles.append(lineValues)
-            for value in line.split(','):
-                if value.endswith("\n"):
-                    value=value[:-1]
-                lineValues.append(float(value))
+            else:
+                for value in line.split(','):
+                    if value.endswith("\n"):
+                        value=value[:-1]
+                    lineValues.append(float(value))
             angles.append(lineValues)
         return angles
