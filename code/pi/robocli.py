@@ -36,11 +36,19 @@ class RoboCLI():
                 self.robo.startPositionMode()
                 self.robo.setVelocity(self.__getVelocityInput())
                 for angle in angles:
-                    self.robo.setAnglesBlocking(angle)
-                    # self.robo.setAngles(angle)
-                    time.sleep(0.1)
+                    if angle[0] == 'vel':
+                        self.robo.setVelocity(angle[1])
+                    else:
+                        self.robo.setAnglesBlocking(angle)
+                        # self.robo.setAngles(angle)
+                        time.sleep(0.1)
             elif inp == 5:
                 angles = []
+            elif inp == 6:
+                entry = []
+                entry.append('vel')
+                entry.append(self.__getVelocityInput())
+                angles.append(entry)
 
     def __getMenu(self):
         menu = ""
@@ -56,6 +64,7 @@ class RoboCLI():
             "[3] read from file (append)",
             "[4] play angles",
             "[5] clear angles",
+            "[6] change velocity",
             "[q] end"
         ]
         return options
