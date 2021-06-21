@@ -64,7 +64,7 @@ class RoboCLI():
             "[3] read from file (append)",
             "[4] play angles",
             "[5] clear angles",
-            "[6] change velocity"
+            "[6] change velocity",
             "[q] end"
         ]
         return options
