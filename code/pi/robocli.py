@@ -44,6 +44,11 @@ class RoboCLI():
                         time.sleep(0.1)
             elif inp == 5:
                 angles = []
+            elif inp == 6:
+                entry = []
+                entry.append('vel')
+                entry.append(self.__getVelocityInput())
+                angles.append(entry)
 
     def __getMenu(self):
         menu = ""
@@ -59,6 +64,7 @@ class RoboCLI():
             "[3] read from file (append)",
             "[4] play angles",
             "[5] clear angles",
+            "[6] change velocity"
             "[q] end"
         ]
         return options
