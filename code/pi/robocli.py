@@ -29,7 +29,7 @@ class RoboCLI():
                 fname = input("enter filename: ")
                 try:
                     anglesFromFile = self.fileHandler.getAnglesFromFile(fname)
-                    angles = anglesFromFile
+                    angles.extend(anglesFromFile)
                 except:
                     print("Error, filename not existent?")
             elif inp == 4:
@@ -38,7 +38,9 @@ class RoboCLI():
                 for angle in angles:
                     self.robo.setAnglesBlocking(angle)
                     # self.robo.setAngles(angle)
-                    time.sleep(0.5)
+                    time.sleep(0.1)
+            elif inp == 5:
+                angles = []
 
     def __getMenu(self):
         menu = ""
@@ -51,8 +53,9 @@ class RoboCLI():
         options=[
             "[1] set Position",
             "[2] save to file",
-            "[3] read from file",
+            "[3] read from file (append)",
             "[4] play angles",
+            "[5] clear angles",
             "[q] end"
         ]
         return options
