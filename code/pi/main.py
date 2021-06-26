@@ -5,7 +5,6 @@ import time
 import cv2
 from imutils.video import VideoStream
 import imutils
-from myutils import map
 import math
 from myLogger import log
 from dynamixel import Dynamixel
@@ -15,7 +14,9 @@ from robocli import RoboCLI
 
 import serial
 
+# set your serial device here:
 serialPort = '/dev/ttyACM0'
+
 ser = serial.Serial(serialPort, 115200, timeout=1)
 ser.flush()
 
@@ -71,7 +72,7 @@ def moveAngles(angles):
         robo.setAngles(angle)
 
 def teachPositions():
-    cli.startCli()
+    cli.startTeachingCli()
 
 try:
     log("starting actual programm")
