@@ -49,7 +49,7 @@ class RoboCLI():
             actionsFromFile = self.fileHandler.getActionsFromFile(fname)
             self.actions.extend(actionsFromFile)
         except:
-            print("Error, filename not existent?")
+            print("Error, file not existent?")
 
     def __runActions(self):
         self.robo.startPositionMode()
@@ -62,7 +62,7 @@ class RoboCLI():
             else:
                 self.robo.setAnglesBlocking(action)
                 # self.robo.setAngles(angle)
-                time.sleep(0.1)
+                # time.sleep(0.1)
 
     def __setVelocity(self):
         entry = []
