@@ -5,6 +5,12 @@ import myutils
 from myLogger import log
 import time
 
+
+'''
+InverseKinematics calculates the inverse kinamatics
+You need to define your robot in the init function 
+Beware: There are some hard-coded values here and the code might be brittle!
+'''
 class InverseKinematics():
 
     def __init__(self):
