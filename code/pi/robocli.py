@@ -33,6 +33,17 @@ class RoboCLI():
                 self.__setVelocity()
             elif inp == 7:
                 self.__addPause()
+            elif inp == 8:
+                self.__addPath()
+
+    def __addPath(self):
+        try:
+            while True:
+                self.__setPosition()
+                time.sleep(0.05)
+        except:
+            pass
+            
 
     def __setPosition(self):
         action = self.robo.getAngles()
