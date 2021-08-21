@@ -1,10 +1,10 @@
 :fire::fire::fire::fire::fire::fire::fire::fire::fire::fire::fire::fire::fire::fire::fire::fire::fire::fire::fire::fire::fire::fire:
 
-:bangbang: **Video on Serworm Michael dropping soon** :bangbang: 
+:bangbang: **Video on Serworm Michael is online** :bangbang: 
 
-:point_right: [youtube.com/channel/UCAyzHVY5uWiHlvm-ppWkqxA](https://www.youtube.com/channel/UCAyzHVY5uWiHlvm-ppWkqxA) :point_left:
+:point_right: https://youtu.be/1fdFsHWkn9U :point_left:
 
-:bangbang: **Subscribe on YouTube, don't miss it!** :bangbang:
+:bangbang: **Subscribe on YouTube, don't miss the next part!** :bangbang:
 
 :fire::fire::fire::fire::fire::fire::fire::fire::fire::fire::fire::fire::fire::fire::fire::fire::fire::fire::fire::fire::fire::fire:
 
