@@ -17,8 +17,10 @@ import serial
 # set your serial device here:
 serialPort = '/dev/ttyACM0'
 
-ser = serial.Serial(serialPort, 115200, timeout=1)
-ser.flush()
+# ser = serial.Serial(serialPort, 115200, timeout=1)
+# ser.flush()
+
+ser = None
 
 servos = [Dynamixel(0, ser), Dynamixel(1, ser), Dynamixel(2, ser), Dynamixel(3, ser), Dynamixel(4, ser)]
 kinematics = InverseKinematics()

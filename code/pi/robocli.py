@@ -2,7 +2,7 @@ import time
 
 class RoboCLI():
 
-    def __init__(self, actionHandler: ActionHandler):
+    def __init__(self, actionHandler):
         self.actionHandler = actionHandler
     
     def startTeachingCli(self):
