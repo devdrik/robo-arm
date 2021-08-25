@@ -1,3 +1,13 @@
+:fire::fire::fire::fire::fire::fire::fire::fire::fire::fire::fire::fire::fire::fire::fire::fire::fire::fire::fire::fire::fire::fire:
+
+:bangbang: **Video on Serworm Michael is online** :bangbang: 
+
+:point_right: https://youtu.be/1fdFsHWkn9U :point_left:
+
+:bangbang: **Subscribe on YouTube, don't miss the next part!** :bangbang:
+
+:fire::fire::fire::fire::fire::fire::fire::fire::fire::fire::fire::fire::fire::fire::fire::fire::fire::fire::fire::fire::fire::fire:
+
 # robo arm
 
 This repo is all about the little robo arm. The community named it **Serworm Michael**, so that is his name now. The arm has a very simple structure, but still enough DoFs to make it a fun challenge to work with. The structure can be 3D printed. The servos are Dynamixel XL330-M288-T. There should be everything you need in this repo. If not, please let me know! 
@@ -5,6 +15,8 @@ This repo is all about the little robo arm. The community named it **Serworm Mic
 The project is work in progress, but it already works. I am very happy, if you add features, refactor the code or point out bad practices. Feel free to open an issue, a pull-request or contact me.
 
 You can find a more detailed (german) description here: [devdrik.de/robo-arm](https://devdrik.de/robo-arm/)
+
+**There will be a video on Serworm Michael soon!**
 
 ## Material
 
