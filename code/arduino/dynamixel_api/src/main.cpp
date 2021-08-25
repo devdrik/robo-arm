@@ -75,10 +75,16 @@ void setProfileVelocityAll(uint32_t velocity) {
 }
 
 bool hasReachedGoalAngle(uint8_t servoId) {
-  float offset = 3;
-  float currentAngle = getAngle(servoId);
-  return currentAngle >= goalAngles[servoId] - offset &&
-          currentAngle <= goalAngles[servoId] + offset;
+  delay(50);
+  int moving_status = dxl.readControlTableItem(MOVING_STATUS, servoId);
+  // DEBUG_SERIAL.print("moving_status: ");
+  // DEBUG_SERIAL.println(moving_status, BIN);
+  int mask = 3;
+  return (moving_status & mask) == 1;
+  // float offset = 3;
+  // float currentAngle = getAngle(servoId);
+  // return currentAngle >= goalAngles[servoId] - offset &&
+  //         currentAngle <= goalAngles[servoId] + offset;
 }
 
 void setOperatingMode(uint8_t servoID, uint8_t mode) {
@@ -126,6 +132,7 @@ void setup() {
     if(dxl.ping(servoID)) {
       dxl.torqueOff(servoID);
       dxl.setOperatingMode(servoID, OP_POSITION);
+      dxl.writeControlTableItem(MOVING_THRESHOLD, servoID, 7);
       dxl.torqueOn(servoID);
       // DEBUG_SERIAL.print("Servo ");
       // DEBUG_SERIAL.print(servoID);
@@ -136,8 +143,101 @@ void setup() {
       // DEBUG_SERIAL.println(" not responding");
     }
   }
-}
 
+  // setProfileVelocity(0, 20);
+  // setAngle(0, 1000);
+  // while (!hasReachedGoalAngle(0))
+  // {
+  //   DEBUG_SERIAL.print("angle: ");
+  //   DEBUG_SERIAL.println(getAngle(0));
+  // }
+  
+  // DEBUG_SERIAL.print("done, angle: ");
+  // DEBUG_SERIAL.println(getAngle(0));
+
+  // setProfileVelocity(0, 20);
+  // DEBUG_SERIAL.print("moving_threashold: ");
+  // DEBUG_SERIAL.println(dxl.readControlTableItem(MOVING_THRESHOLD, 0));
+  // setAngle(0, 20);
+  // hasReachedGoalAngle(0);
+  // delay(20);
+  // hasReachedGoalAngle(0);
+  // delay(20);
+  // hasReachedGoalAngle(0);
+  // delay(20);
+  // hasReachedGoalAngle(0);
+  // delay(20);
+  // hasReachedGoalAngle(0);
+  // delay(20);
+  // hasReachedGoalAngle(0);
+  // delay(20);
+  // hasReachedGoalAngle(0);
+  // delay(20);
+  // hasReachedGoalAngle(0);
+  // delay(20);
+  // hasReachedGoalAngle(0);
+  // delay(20);
+  // hasReachedGoalAngle(0);
+  // delay(20);
+  // hasReachedGoalAngle(0);
+  // delay(20);
+  // hasReachedGoalAngle(0);
+  // delay(20);
+  // hasReachedGoalAngle(0);
+  // delay(20);
+  // hasReachedGoalAngle(0);
+  // delay(20);
+  // hasReachedGoalAngle(0);
+  // delay(20);
+  // hasReachedGoalAngle(0);
+  // delay(20);
+  // hasReachedGoalAngle(0);
+  // delay(20);
+  // hasReachedGoalAngle(0);
+  // delay(20);
+  // hasReachedGoalAngle(0);
+  // delay(20);
+  // hasReachedGoalAngle(0);
+  // delay(20);
+  // hasReachedGoalAngle(0);
+  // delay(20);
+  // hasReachedGoalAngle(0);
+  // delay(20);
+  // hasReachedGoalAngle(0);
+  // delay(20);
+  // hasReachedGoalAngle(0);
+  // delay(20);
+  // hasReachedGoalAngle(0);
+  // delay(20);
+  // // DEBUG_SERIAL.print("hasReached2: ");
+  // // DEBUG_SERIAL.println(hasReachedGoalAngle(0));
+  // // delay(100);
+  // // DEBUG_SERIAL.print("hasReached3: ");
+  // // DEBUG_SERIAL.println(hasReachedGoalAngle(0));
+  // delay(10000);
+  // DEBUG_SERIAL.println("delayed 10");
+  // hasReachedGoalAngle(0);
+  // // DEBUG_SERIAL.print("hasReached4: ");
+  // // DEBUG_SERIAL.println(hasReachedGoalAngle(0));
+  // // while (!hasReachedGoalAngle(0))
+  // //   DEBUG_SERIAL.println("Im looping");
+  // // {
+  // // DEBUG_SERIAL.print("hasReached after: ");
+  // // DEBUG_SERIAL.println(hasReachedGoalAngle(0));
+
+  // delay(500);
+  // setAngle(0, 1);
+  // while (!hasReachedGoalAngle(0))
+  // {
+  //   DEBUG_SERIAL.print("angle: ");
+  //   DEBUG_SERIAL.println(getAngle(0));
+  // }
+
+  // DEBUG_SERIAL.print("done, angle: ");
+  // DEBUG_SERIAL.println(getAngle(0));
+
+  
+}
 // FUNC:PARAM1:PARAMX\n
 
 void loop() {
