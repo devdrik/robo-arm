@@ -33,6 +33,10 @@ class RoboCLI():
                 self.__setVelocity()
             elif inp == 7:
                 self.__addPause()
+            elif inp == 8:
+                self.__deleteLastEntry()
+            elif inp == 9:
+                self.__showEntries()
 
     def __setPosition(self):
         action = self.robo.getAngles()
@@ -93,6 +97,8 @@ class RoboCLI():
             "[5] clear angles",
             "[6] change velocity",
             "[7] add pause",
+            "[8] remove last entry",
+            "[9] show entries",
             "[q] end"
         ]
         return options
@@ -118,3 +124,10 @@ class RoboCLI():
                 continue
             break
         return val
+
+    def __deleteLastEntry(self):
+        self.actions.pop()
+    
+    def __showEntries(self):
+        for entry in self.actions:
+            print(entry)
