@@ -15,7 +15,7 @@ class ActionHandler():
     def saveToFile(self, fname):
         self.fileHandler.saveToFile(fname, self.actions)
 
-    def apendFromFile(self, fname):
+    def appendFromFile(self, fname):
         try:
             actionsFromFile = self.fileHandler.getActionsFromFile(fname)
             self.actions.extend(actionsFromFile)
@@ -46,3 +46,10 @@ class ActionHandler():
         entry.append('pause')
         entry.append(pauseInSeconds)
         self.actions.append(entry)
+
+    def deleteLastEntry(self):
+        self.actions.pop()
+    
+    def showEntries(self):
+        for entry in self.actions:
+            print(entry)

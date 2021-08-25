@@ -2,8 +2,9 @@ import time
 
 class RoboCLI():
 
-    def __init__(self, actionHandler):
+    def __init__(self, actionHandler, robo):
         self.actionHandler = actionHandler
+        self.robo = robo
     
     def startTeachingCli(self):
         while True:
@@ -30,9 +31,13 @@ class RoboCLI():
                 self.__setVelocity()
             elif inp == 7:
                 self.__addPause()
+            elif inp == 8:
+                self.__deleteLastEntry()
+            elif inp == 9:
+                self.__showEntries()
 
     def __setPosition(self):
-        self.actionHandler.setPosition
+        self.actionHandler.setPosition()
 
     def __saveToFile(self):
         fname = input("enter filename: ")
@@ -43,16 +48,13 @@ class RoboCLI():
         self.actionHandler.appendFromFile(fname)
 
     def __runActions(self):
-        self.actionHandler.runActions()
+        self.actionHandler.runActions(self.__getVelocityInput())
 
     def __setVelocity(self):
         self.actionHandler.setVelocity(self.__getVelocityInput())
 
     def __addPause(self):
-        entry = []
-        entry.append('pause')
-        entry.append(self.__getFloatInput("enter pause in [s]: "))
-        self.actions.append(entry)
+        self.actionHandler.addPause(self.__getFloatInput("enter pause in [s]: "))
 
 
     def __getMenu(self):
@@ -71,6 +73,8 @@ class RoboCLI():
             "[5] clear angles",
             "[6] change velocity",
             "[7] add pause",
+            "[8] remove last entry",
+            "[9] show entries",
             "[q] end"
         ]
         return options
@@ -96,3 +100,9 @@ class RoboCLI():
                 continue
             break
         return val
+
+    def __deleteLastEntry(self):
+        self.actionHandler.deleteLastEntry()
+    
+    def __showEntries(self):
+        self.actionHandler.showEntries()
