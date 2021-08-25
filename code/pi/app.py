@@ -39,7 +39,22 @@ def index():
 
 @app.route("/setPosition")
 def setPosition():
-    print("fsad")
+    actionHandler.setPosition()
+    return "done"
+
+@app.route("/saveToFile")
+def setPosition():
+    actionHandler.saveToFile()
+    return "done"
+
+@app.route("/runActions")
+def setPosition():
+    actionHandler.apendFromFile()
+    return "done"
+
+@app.route("/setVelocity")
+def setPosition():
+    actionHandler.setVelocity()
     return "done"
 
 if __name__ == "__main__":
