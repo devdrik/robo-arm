@@ -11,6 +11,7 @@ from dynamixel import Dynamixel
 from filehandler import FileHandler
 from roboMoves import RoboMoves
 from robocli import RoboCLI
+from actionHandler import ActionHandler
 
 import serial
 
@@ -26,7 +27,8 @@ robo = Robo(servos, kinematics)
 
 moves = RoboMoves(robo, kinematics)
 fileHandler = FileHandler()
-cli = RoboCLI(robo, fileHandler)
+actionHandler = ActionHandler(robo, fileHandler)
+cli = RoboCLI(actionHandler)
 
 
 def moveWithCV(showMovie=False):

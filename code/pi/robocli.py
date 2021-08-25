@@ -2,13 +2,10 @@ import time
 
 class RoboCLI():
 
-    def __init__(self, robo, fileHandler):
-        self.robo = robo
-        self.fileHandler = fileHandler
-        self.actions = []
+    def __init__(self, actionHandler):
+        self.actionHandler = actionHandler
     
     def startTeachingCli(self):
-        self.actions = []
         while True:
             self.robo.startTeachMode()
             menu = self.__getMenu()
@@ -39,40 +36,21 @@ class RoboCLI():
                 self.__showEntries()
 
     def __setPosition(self):
-        action = self.robo.getAngles()
-        self.actions.append(action)
-        print(action)
+        self.actionHandler.setPosition
 
     def __saveToFile(self):
         fname = input("enter filename: ")
-        self.fileHandler.saveToFile(fname, self.actions)
+        self.actionHandler.saveToFile(fname)
 
     def __apendFromFile(self):
         fname = input("enter filename: ")
-        try:
-            actionsFromFile = self.fileHandler.getActionsFromFile(fname)
-            self.actions.extend(actionsFromFile)
-        except:
-            print("Error, file not existent?")
+        self.actionHandler.appendFromFile(fname)
 
     def __runActions(self):
-        self.robo.startPositionMode()
-        self.robo.setVelocity(self.__getVelocityInput())
-        for action in self.actions:
-            if action[0] == 'vel':
-                self.robo.setVelocity(action[1])
-            elif action[0] == 'pause':
-                time.sleep(action[1])
-            else:
-                self.robo.setAnglesBlocking(action)
-                # self.robo.setAngles(angle)
-                # time.sleep(0.1)
+        self.actionHandler.runActions()
 
     def __setVelocity(self):
-        entry = []
-        entry.append('vel')
-        entry.append(self.__getVelocityInput())
-        self.actions.append(entry)
+        self.actionHandler.setVelocity(self.__getVelocityInput())
 
     def __addPause(self):
         entry = []
