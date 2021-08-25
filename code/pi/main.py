@@ -28,7 +28,7 @@ robo = Robo(servos, kinematics)
 moves = RoboMoves(robo, kinematics)
 fileHandler = FileHandler()
 actionHandler = ActionHandler(robo, fileHandler)
-cli = RoboCLI(actionHandler)
+cli = RoboCLI(actionHandler, robo)
 
 
 def moveWithCV(showMovie=False):

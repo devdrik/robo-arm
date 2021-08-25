@@ -2,8 +2,9 @@ import time
 
 class RoboCLI():
 
-    def __init__(self, actionHandler):
+    def __init__(self, actionHandler, robo):
         self.actionHandler = actionHandler
+        self.robo = robo
     
     def startTeachingCli(self):
         while True:
@@ -36,7 +37,7 @@ class RoboCLI():
                 self.__showEntries()
 
     def __setPosition(self):
-        self.actionHandler.setPosition
+        self.actionHandler.setPosition()
 
     def __saveToFile(self):
         fname = input("enter filename: ")
@@ -47,16 +48,13 @@ class RoboCLI():
         self.actionHandler.appendFromFile(fname)
 
     def __runActions(self):
-        self.actionHandler.runActions()
+        self.actionHandler.runActions(self.__getVelocityInput())
 
     def __setVelocity(self):
         self.actionHandler.setVelocity(self.__getVelocityInput())
 
     def __addPause(self):
-        entry = []
-        entry.append('pause')
-        entry.append(self.__getFloatInput("enter pause in [s]: "))
-        self.actions.append(entry)
+        self.actionHandler.addPause(self.__getFloatInput("enter pause in [s]: "))
 
 
     def __getMenu(self):
@@ -104,8 +102,7 @@ class RoboCLI():
         return val
 
     def __deleteLastEntry(self):
-        self.actions.pop()
+        self.actionHandler.deleteLastEntry()
     
     def __showEntries(self):
-        for entry in self.actions:
-            print(entry)
+        self.actionHandler.showEntries()
