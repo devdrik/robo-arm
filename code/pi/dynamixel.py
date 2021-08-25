@@ -49,16 +49,16 @@ class Dynamixel(IServo):
 
     def hasReachedAngle(self):
         # USING HASREACHEDANGLE FROM ARDUINO
-        # function = 6
-        # message = f'{function}:{self.id}\n'.encode("utf-8")
-        # self.ser.write(message)
-        # answer = self.ser.read(1)
+        function = FUNC_HAS_REACHED_ANGLE
+        message = f'{function}:{self.id}\n'.encode("utf-8")
+        self.ser.write(message)
+        answer = self.ser.read(1)
         # log(f'servo {self.id} answer: {answer}')
-        # hasReached = int.from_bytes(answer, byteorder='big', signed=False)
+        hasReached = int.from_bytes(answer, byteorder='big', signed=False)
         # log(f'{hasReached}')
-        # if hasReached > 0:
-        #     log(f'servo {self.id} has reached goal angle of {self.goalAngle}')
-        # return hasReached > 0
+        if hasReached > 0:
+            log(f'servo {self.id} has reached goal angle, is {self.getAngle()} should {self.goalAngle}')
+        return hasReached > 0
         # USING LOCAL CALCULATED HASREACHEDANGLE
         # currentAngle = self.getAngle()
         # allowedError = 4
@@ -67,14 +67,14 @@ class Dynamixel(IServo):
         #     log(f'servo {self.id} hasReached position. {currentAngle}/{self.goalAngle}')
         # return hasReached
         # USING ISMOVING FROM ARDUINO
-        function = FUNC_IS_MOVING
-        message = f'{function}:{self.id}\n'.encode("utf-8")
-        self.ser.write(message)
-        isMovingByte = self.ser.read(1)
-        hasReached = int.from_bytes(isMovingByte, byteorder='big', signed=False)
-        if hasReached == 0:
-            log(f'servo {self.id} has reached goal angle of {self.goalAngle}')
-        return hasReached == 0
+        # function = FUNC_IS_MOVING
+        # message = f'{function}:{self.id}\n'.encode("utf-8")
+        # self.ser.write(message)
+        # isMovingByte = self.ser.read(1)
+        # hasReached = int.from_bytes(isMovingByte, byteorder='big', signed=False)
+        # if hasReached == 0:
+        #     log(f'servo {self.id} has reached goal angle, is {self.getAngle()} should {self.goalAngle}')
+        # return hasReached == 0
 
     def startPositionMode(self):
         function = FUNC_SET_POSITION_MODE_ALL
