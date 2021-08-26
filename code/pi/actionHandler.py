@@ -20,7 +20,7 @@ class ActionHandler():
             actionsFromFile = self.fileHandler.getActionsFromFile(fname)
             self.actions.extend(actionsFromFile)
         except:
-            print("Error, file not existent?")
+            print("Error, file not existent? fname: ", fname)
 
     def runActions(self, velocity):
         self.robo.startPositionMode()
@@ -53,3 +53,6 @@ class ActionHandler():
     def showEntries(self):
         for entry in self.actions:
             print(entry)
+
+    def clearActions(self):
+        self.actions = []

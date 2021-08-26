@@ -26,7 +26,7 @@ class RoboCLI():
             elif inp == 4:
                 self.__runActions()
             elif inp == 5:
-                self.actions = []
+                self.actionHandler.clearActions()
             elif inp == 6:
                 self.__setVelocity()
             elif inp == 7:
