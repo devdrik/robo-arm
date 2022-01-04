@@ -1,14 +1,6 @@
-:fire::fire::fire::fire::fire::fire::fire::fire::fire::fire::fire::fire::fire::fire::fire::fire::fire::fire::fire::fire::fire::fire:
-
-:bangbang: **Video on Serworm Michael is online** :bangbang: 
-
-:point_right: https://youtu.be/1fdFsHWkn9U :point_left:
-
-:bangbang: **Subscribe on YouTube, don't miss the next part!** :bangbang:
-
-:fire::fire::fire::fire::fire::fire::fire::fire::fire::fire::fire::fire::fire::fire::fire::fire::fire::fire::fire::fire::fire::fire:
-
 # robo arm
+
+https://user-images.githubusercontent.com/67547895/148030076-b6884d7a-699d-42de-8d19-b7936f6b32be.mp4
 
 This repo is all about the little robo arm. The community named it **Serworm Michael**, so that is his name now. The arm has a very simple structure, but still enough DoFs to make it a fun challenge to work with. The structure can be 3D printed. The servos are Dynamixel XL330-M288-T. There should be everything you need in this repo. If not, please let me know! 
 
@@ -16,7 +8,7 @@ The project is work in progress, but it already works. I am very happy, if you a
 
 You can find a more detailed (german) description here: [devdrik.de/robo-arm](https://devdrik.de/robo-arm/)
 
-**There will be a video on Serworm Michael soon!**
+And here is a video about the desgin and assembly: https://youtu.be/1fdFsHWkn9U
 
 ## Material
 
@@ -37,7 +29,7 @@ Nothing to setup here. Just flash dynamixel_api from the code/arduino folder to 
 
 ### Python environment
 
-You need a python3 environment with pip installed in order to get the robo arm to work. In that env you need to install [ikpy](https://github.com/Phylliade/ikpy).
+You need a python3 environment with pip installed in order to get the robo arm to work. In that env you need to install [ikpy](https://github.com/Phylliade/ikpy). You only need ikpy, if you intend to use inverse kinematics.
 ```
 pip install ikpy
 ```
